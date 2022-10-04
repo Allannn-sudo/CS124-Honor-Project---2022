@@ -18,4 +18,5 @@ SCREEN_HEIGHT = 600
 #Game Loop
 running = False
 while running:
+    a=1
     #do stuff
