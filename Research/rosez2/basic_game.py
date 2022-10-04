@@ -1,9 +1,15 @@
 # Import the pygame module
 from lib2to3.pgen2 import pgen
+from os import chdir
+from shutil import register_archive_format
+from telnetlib import DO
 import pygame
+import os
 
 # Import random for random numbers
 import random
+
+os.chdir(r"C:\Users\Rose\Documents\GitHub\Group2-FA22\Research\rosez2")
 
 # Import pygame.locals for easier access to key coordinates
 # Updated to conform to flake8 and black standards
@@ -209,4 +215,3 @@ while running:
 # All done! Stop and quit the mixer.
 pygame.mixer.music.stop()
 pygame.mixer.quit()
-
