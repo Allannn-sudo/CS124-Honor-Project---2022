@@ -3,10 +3,9 @@ from turtle import Screen
 import pygame
 from pygame.locals import (
     RLEACCEL,
-    K_UP,
-    K_DOWN,
     K_LEFT,
     K_RIGHT,
+    K_UP,
     K_ESCAPE,
     KEYDOWN,
     QUIT,
@@ -33,9 +32,25 @@ class Player(pygame.sprite.Sprite):
         self.yVelocity = 0
     def updateYPos(self):
         self.rect.move_ip(0, self.yVelocity)
-    #Movement
-    # def update(self, pressed_keys):
-        #For jumping, set self.yVelocity to a certain value when button is pressed?
+    # Move the sprite based on user keypresses
+    def update(self, pressed_keys):
+        if pressed_keys[K_LEFT]:
+            self.rect.move_ip(-5, 0)
+        if pressed_keys[K_RIGHT]:
+            self.rect.move_ip(5, 0)
+        if pressed_keys[K_UP]:
+            self.yVelocity = -10
+
+        # Keep player on the screen
+        if self.rect.left < 0:
+            self.rect.left = 0
+        if self.rect.right > SCREEN_WIDTH:
+            self.rect.right = SCREEN_WIDTH
+        if self.rect.top <= 0:
+            self.rect.top = 0
+        if self.rect.bottom >= SCREEN_HEIGHT:
+            self.rect.bottom = SCREEN_HEIGHT
+
 
 class Terrain(pygame.sprite.Sprite):
     def __init__(self):
