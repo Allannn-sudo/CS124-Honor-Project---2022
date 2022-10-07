@@ -1,5 +1,6 @@
 from cgi import test
 from turtle import Screen
+from math import sqrt as root
 import pygame
 from pygame.locals import (
     RLEACCEL,
@@ -39,17 +40,20 @@ class Player(pygame.sprite.Sprite):
         if pressed_keys[K_RIGHT]:
             self.rect.move_ip(5, 0)
         if pressed_keys[K_UP]:
-            self.yVelocity = -10
+            if self.grounded:
+                self.grounded = False
+                self.yVelocity = -15
 
         # Keep player on the screen
         if self.rect.left < 0:
             self.rect.left = 0
         if self.rect.right > SCREEN_WIDTH:
             self.rect.right = SCREEN_WIDTH
-        if self.rect.top <= 0:
+        if self.rect.top < 0:
             self.rect.top = 0
-        if self.rect.bottom >= SCREEN_HEIGHT:
-            self.rect.bottom = SCREEN_HEIGHT
+            self.yVelocity = 0
+        if self.rect.top >= SCREEN_HEIGHT:
+            self.rect.top = SCREEN_HEIGHT
 
 
 class Terrain(pygame.sprite.Sprite):
@@ -67,7 +71,7 @@ class Terrain(pygame.sprite.Sprite):
 #Initialize Variables?-------
 screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 
-gAccel = 0.3
+gAccel = 6
 
 player = Player()
 #temporary
@@ -107,16 +111,15 @@ while running:
     for entity in gravity_obj:
         if pygame.sprite.spritecollideany(entity, terrain) and entity.grounded == False:
             entity.grounded = True
-            entity.airtime = 0
+            entity.airTime = 0
             entity.yVelocity = 0
             if entity.rect.y < pygame.sprite.spritecollideany(entity, terrain).rect.bottom + 1:
                 entity.rect.y = pygame.sprite.spritecollideany(entity, terrain).rect.top + 1 - entity.rect.h
         elif pygame.sprite.spritecollideany(entity, terrain) and entity.grounded == True:
-            entity.airtime = 0
+            entity.airTime = 0
         else:
-            entity.yVelocity += gAccel * entity.airTime
+            entity.yVelocity = entity.yVelocity + gAccel * entity.airTime
             entity.airTime += 1/FRAME_RATE
-
 
     screen.fill((0, 0, 0))
     
