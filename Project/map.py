@@ -57,4 +57,12 @@ terrain.add(surfaceThree)
 terrain.add(surfaceFour)
 pygame.display.flip()
 
+while running:
+    for event in pygame.event.get():
+        if event.type == KEYDOWN:
+            if event.key == K_ESCAPE:
+                running = False
+        elif event.type == QUIT:
+            running = False
+
 #Nothing appears in the screen
