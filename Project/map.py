@@ -18,63 +18,44 @@ screen.fill((0, 0, 0))
 
 
 class Terrain(pygame.sprite.Sprite):
-    # #Group for player movement wrote this part for temporary testing
-    # def __init__(self):
-    #     super(Terrain, self).__init__()
-    #     self.surf = pygame.Surface((150,50))    
-    #     self.surf.fill((0,255,0))
-    #     #temporary terrain placement (create method with position, shape, and color as argument?)
-    #     self.rect = self.surf.get_rect(
-    #         topleft=(
-    #             0, SCREEN_HEIGHT - 100
-    #         )
-    #     )
-    # #I want to create a constructor for each block that accept parameter
-    # def update(self, suface_Width, suface_Height, pos_Width, pos_Height):
-    #     self.surf = pygame.Surface((suface_Width, suface_Height))
-    #     self.rect = self.surf.get_rect(
-    #         topleft=(
-    #             pos_Width, pos_Height
-    #         )
-    #     )
-#---------------    CHANGED PART
     def __init__(self, suface_Width, suface_Height, pos_Width, pos_Height):
         super(Terrain, self).__init__()
         self.surf = pygame.Surface((suface_Width, suface_Height))    
         self.surf.fill((0,255,0))
-        #temporary terrain placement (create method with position, shape, and color as argument?)
         self.rect = self.surf.get_rect(
             topleft=(
                 pos_Width, pos_Height
             )
         )
-#---------------    CHANGED PART
+        self.moving_up = True
+    
+    #Move the block up and down at a constant speed
+    def update(self):
+        if self.moving_up == True:
+            self.rect.move_ip(0, -3)
+        elif self.moving_up == False:
+            self.rect.move_ip(0, 3)
+        if self.rect.top == 575:
+            self.moving_up = True
+        if self.rect.top == 200:
+            self.moving_up = False
+        
 
 
-# surfaceOne = Terrain()
-# surfaceTwo = Terrain()
-# surfaceThree = Terrain()
-# surfaceFour = Terrain()
-
-# surfaceOne.update(175, 175, 0, 500)
-# surfaceTwo.update(100, 250, 275, 400)
-# surfaceThree.update(100, 25, 450, 500)
-# #Also let surfaceThree move up and dow in constant speed later
-# surfaceFour.update(175, 100, 625, 500)
-
-#---------------    CHANGED PART
 surfaceOne = Terrain(175, 175, 0, 500)
 surfaceTwo = Terrain(100, 250, 275, 400)
 surfaceThree = Terrain(100, 25, 450, 500)
 surfaceFour = Terrain(175, 100, 625, 500)
-#---------------
-
 
 terrain = pygame.sprite.Group()
 terrain.add(surfaceOne)
 terrain.add(surfaceTwo)
 terrain.add(surfaceThree)
 terrain.add(surfaceFour)
+
+#Added clock frame
+clock = pygame.time.Clock()
+FRAME_RATE = 60
 
 
 running = True
@@ -90,7 +71,10 @@ while running:
 
     for obj in terrain:
         screen.blit(obj.surf,obj.rect)
+    
+    #Move surface three up and down
+    surfaceThree.update()
 
     pygame.display.flip()
 
-#Nothing appears in the screen
+    clock.tick(FRAME_RATE)
