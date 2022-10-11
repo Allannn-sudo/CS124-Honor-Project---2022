@@ -26,7 +26,7 @@ class Player(pygame.sprite.Sprite):
         self.surf = pygame.Surface((75,150))
         self.surf.fill((255,255,255))
         self.surf = pygame.image.load("basic.jpeg").convert()
-        self.surf.set_colorkey((255,255,255), RLEACCEL)
+        # self.surf.set_colorkey((255,255,255), RLEACCEL)
         self.rect = self.surf.get_rect()
         self.grounded = False
         self.airTime = 0
@@ -106,20 +106,36 @@ while running:
         elif event.type == QUIT:
             running = False
 
-
+    
     #GRAVITY
     for entity in gravity_obj:
-        if pygame.sprite.spritecollideany(entity, terrain) and entity.grounded == False:
-            entity.grounded = True
-            entity.airTime = 0
-            entity.yVelocity = 0
-            if entity.rect.y < pygame.sprite.spritecollideany(entity, terrain).rect.bottom + 1:
-                entity.rect.y = pygame.sprite.spritecollideany(entity, terrain).rect.top + 1 - entity.rect.h
-        elif pygame.sprite.spritecollideany(entity, terrain) and entity.grounded == True:
-            entity.airTime = 0
+        if pygame.sprite.spritecollideany(entity, terrain):
+            obj = pygame.sprite.spritecollideany(entity, terrain).rect
+            if entity.grounded == False:
+                if entity.rect.right > obj.left and entity.rect.left < obj.right and entity.rect.bottom < obj.top + 20:
+                    entity.grounded = True
+                    entity.airTime = 0
+                    entity.yVelocity = 0
+                    entity.rect.y = obj.top + 1 - entity.rect.h
+                else:
+                    print("yes")
+                    if entity.rect.left < obj.right - 1:
+                        entity.rect.left = obj.right
+                    if entity.rect.right < obj.left + 1:
+                        entity.rect.right = obj.left
+            elif entity.grounded == True:
+                entity.airTime = 0
         else:
+            entity.grounded = False
             entity.yVelocity = entity.yVelocity + gAccel * entity.airTime
             entity.airTime += 1/FRAME_RATE
+
+
+
+
+                
+
+
 
     screen.fill((0, 0, 0))
     
