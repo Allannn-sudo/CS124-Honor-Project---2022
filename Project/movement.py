@@ -59,18 +59,29 @@ class Player(pygame.sprite.Sprite):
         if self.rect.top >= SCREEN_HEIGHT:
             self.rect.top = SCREEN_HEIGHT
 
-
+#Terrain code from map.py
 class Terrain(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, suface_Width, suface_Height, pos_Width, pos_Height):
         super(Terrain, self).__init__()
-        self.surf = pygame.Surface((150,50))    
+        self.surf = pygame.Surface((suface_Width, suface_Height))    
         self.surf.fill((0,255,0))
-        #temporary terrain placement (create method with position, shape, and color as argument?)
         self.rect = self.surf.get_rect(
             topleft=(
-                0, SCREEN_HEIGHT - 100
+                pos_Width, pos_Height
             )
         )
+        self.moving_up = True
+    
+    #Move the block up and down at a constant speed
+    def update(self):
+        if self.moving_up == True:
+            self.rect.move_ip(0, -3)
+        elif self.moving_up == False:
+            self.rect.move_ip(0, 3)
+        if self.rect.top == 575:
+            self.moving_up = True
+        if self.rect.top == 200:
+            self.moving_up = False
 
 #Initialize Variables?-------
 screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
@@ -78,8 +89,12 @@ screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 gAccel = 6
 
 player = Player()
+
 #temporary
-testTerrain = Terrain()
+testTerrain = Terrain(175, 175, 0, 500)
+testTerrain2 = Terrain(100, 250, 350, 400)
+testTerrain3 = Terrain(100, 250, 550, 300)
+
     #Sprite Groups
 all_sprites = pygame.sprite.Group()
 gravity_obj = pygame.sprite.Group()
@@ -90,11 +105,15 @@ terrain = pygame.sprite.Group()
     #Add to groups
 all_sprites.add(player)
 all_sprites.add(testTerrain)
+all_sprites.add(testTerrain2)
+all_sprites.add(testTerrain3)
 
 gravity_obj.add(player)
 
 #temporary
 terrain.add(testTerrain)
+terrain.add(testTerrain2)
+terrain.add(testTerrain3)
 
 
 clock = pygame.time.Clock()
@@ -116,16 +135,20 @@ while running:
         if pygame.sprite.spritecollideany(entity, terrain):
             obj = pygame.sprite.spritecollideany(entity, terrain).rect
             if entity.grounded == False:
-                if entity.rect.right > obj.left and entity.rect.left < obj.right and entity.rect.bottom < obj.top + 20:
+                #Check if player is less than 50 units into the ground from the top (should be only when player lands on top of terrain)
+                if entity.rect.right > obj.left and entity.rect.left < obj.right and entity.rect.bottom < obj.top + 50:
                     entity.grounded = True
                     entity.airTime = 0
                     entity.yVelocity = 0
                     entity.rect.y = obj.top + 1 - entity.rect.h
+                #Check if player is more than 50 units into the ground from the top (should be only when player is not on terrain/on the side of the terrain)
                 else:
-                    print("yes")
-                    if entity.rect.left < obj.right - 1:
+                    #Check which side of terrain player is colliding with
+                    #Right
+                    if entity.rect.left < obj.right and entity.rect.left > obj.right - 10:
                         entity.rect.left = obj.right
-                    if entity.rect.right < obj.left + 1:
+                    #Left
+                    if entity.rect.right > obj.left and entity.rect.right < obj.left + 10:
                         entity.rect.right = obj.left
             elif entity.grounded == True:
                 entity.airTime = 0
@@ -133,13 +156,6 @@ while running:
             entity.grounded = False
             entity.yVelocity = entity.yVelocity + gAccel * entity.airTime
             entity.airTime += 1/FRAME_RATE
-
-
-
-
-                
-
-
 
     screen.fill((0, 0, 0))
     
