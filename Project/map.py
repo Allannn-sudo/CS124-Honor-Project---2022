@@ -53,7 +53,7 @@ class Terrain(pygame.sprite.Sprite):
         screen.blit(self.surf, self.rect)
 
 
-        
+#Create blocks
 surfaceOne = Terrain(200, 300, 0, 600)
 surfaceTwo = Terrain(225, 350, 350, 500)
 surfaceThree = Terrain(175, 50, 700, 500)
@@ -64,6 +64,8 @@ surfaceSeven = Terrain(100, 175, 475, 425)
 surfaceToCreate = Terrain(100, 25, 9999999, 99999999999)
 surfaceToCreate.surf.fill((255, 255, 255))
 
+
+#Add blocks to sprite group
 terrain = pygame.sprite.Group()
 terrain.add(surfaceOne)
 terrain.add(surfaceTwo)
