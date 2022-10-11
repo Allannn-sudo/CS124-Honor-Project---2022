@@ -25,8 +25,8 @@ class Player(pygame.sprite.Sprite):
         super(Player, self).__init__()
         self.surf = pygame.Surface((75,150))
         self.surf.fill((255,255,255))
-        # self.surf = pygame.image.load("{IMAGE PATH}").convert()
-        # self.surf.set_colorkey((255,255,255), RLEACCEL)
+        self.surf = pygame.image.load("basic.jpeg").convert()
+        self.surf.set_colorkey((255,255,255), RLEACCEL)
         self.rect = self.surf.get_rect()
         self.grounded = False
         self.airTime = 0
