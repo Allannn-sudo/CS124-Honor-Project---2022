@@ -37,8 +37,12 @@ class Player(pygame.sprite.Sprite):
     def update(self, pressed_keys):
         if pressed_keys[K_LEFT]:
             self.rect.move_ip(-5, 0)
+            # player animation
+            self.surf = pygame.image.load("move1.jpeg").convert()
         if pressed_keys[K_RIGHT]:
             self.rect.move_ip(5, 0)
+            # player animation
+            self.surf = pygame.transform.flip(pygame.image.load("move1.jpeg").convert(), True, False)
         if pressed_keys[K_UP]:
             if self.grounded:
                 self.grounded = False
