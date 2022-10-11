@@ -10,8 +10,8 @@ from pygame.locals import (
 )
 pygame.init()
 
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
+SCREEN_WIDTH = 1200
+SCREEN_HEIGHT = 900
 screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 screen.fill((0, 0, 0))
 
@@ -39,19 +39,40 @@ class Terrain(pygame.sprite.Sprite):
             self.moving_up = True
         if self.rect.top == 200:
             self.moving_up = False
+
+    #Place block with mouse click
+    def update2(self):
+        mouse_pos = pygame.mouse.get_pos()
+        mouse_buttons = pygame.mouse.get_pressed()
+        if any(mouse_buttons):
+            self.rect = self.surf.get_rect(
+                center=(
+                    mouse_pos
+                )
+            )
+        screen.blit(self.surf, self.rect)
+
+
         
-
-
-surfaceOne = Terrain(175, 175, 0, 500)
-surfaceTwo = Terrain(100, 250, 275, 400)
-surfaceThree = Terrain(100, 25, 450, 500)
-surfaceFour = Terrain(175, 100, 625, 500)
+surfaceOne = Terrain(200, 300, 0, 600)
+surfaceTwo = Terrain(225, 350, 350, 500)
+surfaceThree = Terrain(175, 50, 700, 500)
+surfaceFour = Terrain(200, 300, 1000, 600)
+surfaceFive = Terrain(100, 25, 0, 475)
+surfaceSix = Terrain(100, 25, 150, 375)
+surfaceSeven = Terrain(100, 175, 475, 425)
+surfaceToCreate = Terrain(100, 25, 9999999, 99999999999)
+surfaceToCreate.surf.fill((255, 255, 255))
 
 terrain = pygame.sprite.Group()
 terrain.add(surfaceOne)
 terrain.add(surfaceTwo)
 terrain.add(surfaceThree)
 terrain.add(surfaceFour)
+terrain.add(surfaceFive)
+terrain.add(surfaceSix)
+terrain.add(surfaceSeven)
+terrain.add(surfaceToCreate)
 
 #Added clock frame
 clock = pygame.time.Clock()
@@ -74,6 +95,8 @@ while running:
     
     #Move surface three up and down
     surfaceThree.update()
+    #Place the surface by mouse click
+    surfaceToCreate.update2()
 
     pygame.display.flip()
 
