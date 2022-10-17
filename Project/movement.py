@@ -10,6 +10,8 @@ from pygame.locals import (
     K_ESCAPE,
     KEYDOWN,
     QUIT,
+    K_LSHIFT,
+    K_RSHIFT,
 )
 
 pygame.init()
@@ -36,17 +38,28 @@ class Player(pygame.sprite.Sprite):
     # Move the sprite based on user keypresses
     def update(self, pressed_keys):
         if pressed_keys[K_LEFT]:
-            self.rect.move_ip(-5, 0)
+            if pressed_keys[K_LSHIFT or K_RSHIFT]: # add shift for speeding up
+                self.rect.move_ip(-10, 0)
+            else : 
+                self.rect.move_ip(-5, 0)
             # player animation
             self.surf = pygame.image.load("move1.jpeg").convert()
         if pressed_keys[K_RIGHT]:
-            self.rect.move_ip(5, 0)
+            if pressed_keys[K_LSHIFT or K_RSHIFT]: # add shift for speeding up
+                self.rect.move_ip(10, 0)
+            else : 
+                self.rect.move_ip(5, 0)
             # player animation
             self.surf = pygame.transform.flip(pygame.image.load("move1.jpeg").convert(), True, False)
         if pressed_keys[K_UP]:
+            # add double jump - which can only jump twice
+            DOUBLEJUMP = 0
             if self.grounded:
-                self.grounded = False
+                if (DOUBLEJUMP < 2): 
+                    self.grounded = False
                 self.yVelocity = -15
+                DOUBLEJUMP += 1
+
 
         # Keep player on the screen
         if self.rect.left < 0:
