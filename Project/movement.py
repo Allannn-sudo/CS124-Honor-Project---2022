@@ -23,6 +23,7 @@ SCREEN_HEIGHT = 600
 
 #Classes---------------------
 class Player(pygame.sprite.Sprite):
+
     def __init__(self):
         super(Player, self).__init__()
         self.surf = pygame.Surface((75,150))
@@ -33,24 +34,50 @@ class Player(pygame.sprite.Sprite):
         self.grounded = False
         self.airTime = 0
         self.yVelocity = 0
+
+        # animation for movement
+        self.sprites = []
+        self.is_animation = False
+        self.sprites.append(pygame.image.load('basic.jpeg'))
+        self.sprites.append(pygame.image.load('move1.jpeg'))
+        self.sprites.append(pygame.image.load('basic.jpeg'))
+        self.sprites.append(pygame.image.load('move2.jpeg'))
+        self.current_sprite = 0
+        self.image = self.sprites[self.current_sprite]
+
     def updateYPos(self):
         self.rect.move_ip(0, self.yVelocity)
+
+    def animate(self):
+        self.is_animating = True
+
     # Move the sprite based on user keypresses
+    def update_animation(self):
+        self.current_sprite += 1
+        if self.current_sprite >= len(self.sprites):
+            self.current_sprite = 0
+        self.image = self.sprites[self.current_sprite]
+
     def update(self, pressed_keys):
         if pressed_keys[K_LEFT]:
             if pressed_keys[K_LSHIFT or K_RSHIFT]: # add shift for speeding up
                 self.rect.move_ip(-10, 0)
             else : 
                 self.rect.move_ip(-5, 0)
+
             # player animation
-            self.surf = pygame.image.load("move1.jpeg").convert()
+            self.update_animation
+            self.surf = self.image.convert()
+            
         if pressed_keys[K_RIGHT]:
             if pressed_keys[K_LSHIFT or K_RSHIFT]: # add shift for speeding up
                 self.rect.move_ip(10, 0)
             else : 
                 self.rect.move_ip(5, 0)
             # player animation
-            self.surf = pygame.transform.flip(pygame.image.load("move1.jpeg").convert(), True, False)
+            self.update_animation
+            self.surf = pygame.transform.flip(self.image, True, False)
+
         if pressed_keys[K_UP]:
             # add double jump - which can only jump twice
             DOUBLEJUMP = 0
