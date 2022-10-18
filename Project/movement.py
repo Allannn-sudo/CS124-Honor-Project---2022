@@ -59,6 +59,9 @@ class Player(pygame.sprite.Sprite):
                     self.grounded = False
                 self.yVelocity = -15
                 DOUBLEJUMP += 1
+                
+            if self.yVelocity < 0:
+                self.yVelocity = -15
 
 
         # Keep player on the screen
