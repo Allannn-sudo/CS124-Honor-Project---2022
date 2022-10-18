@@ -132,54 +132,54 @@ terrain.add(testTerrain2)
 terrain.add(testTerrain3)
 
 
-clock = pygame.time.Clock()
-FRAME_RATE = 60
+# clock = pygame.time.Clock()
+# FRAME_RATE = 60
 
-running = True
-#Game Loop-------------------
-while running:
-    for event in pygame.event.get():
-        if event.type == KEYDOWN:
-            if event.key == K_ESCAPE:
-                running = False
-        elif event.type == QUIT:
-            running = False
+# running = True
+# #Game Loop-------------------
+# while running:
+#     for event in pygame.event.get():
+#         if event.type == KEYDOWN:
+#             if event.key == K_ESCAPE:
+#                 running = False
+#         elif event.type == QUIT:
+#             running = False
 
     
-    #GRAVITY
-    for entity in gravity_obj:
-        if pygame.sprite.spritecollideany(entity, terrain):
-            obj = pygame.sprite.spritecollideany(entity, terrain).rect
-            if entity.grounded == False:
-                #Check if player is less than 50 units into the ground from the top (should be only when player lands on top of terrain)
-                if entity.rect.right > obj.left and entity.rect.left < obj.right and entity.rect.bottom < obj.top + 50:
-                    entity.grounded = True
-                    entity.airTime = 0
-                    entity.yVelocity = 0
-                    entity.rect.y = obj.top + 1 - entity.rect.h
-                #Check if player is more than 50 units into the ground from the top (should be only when player is not on terrain/on the side of the terrain)
-                else:
-                    #Check which side of terrain player is colliding with
-                    #Right
-                    if entity.rect.left < obj.right and entity.rect.left > obj.right - 10:
-                        entity.rect.left = obj.right
-                    #Left
-                    if entity.rect.right > obj.left and entity.rect.right < obj.left + 10:
-                        entity.rect.right = obj.left
-            elif entity.grounded == True:
-                entity.airTime = 0
-        else:
-            entity.grounded = False
-            entity.yVelocity = entity.yVelocity + gAccel * entity.airTime
-            entity.airTime += 1/FRAME_RATE
+#     #GRAVITY
+#     for entity in gravity_obj:
+#         if pygame.sprite.spritecollideany(entity, terrain):
+#             obj = pygame.sprite.spritecollideany(entity, terrain).rect
+#             if entity.grounded == False:
+#                 #Check if player is less than 50 units into the ground from the top (should be only when player lands on top of terrain)
+#                 if entity.rect.right > obj.left and entity.rect.left < obj.right and entity.rect.bottom < obj.top + 50:
+#                     entity.grounded = True
+#                     entity.airTime = 0
+#                     entity.yVelocity = 0
+#                     entity.rect.y = obj.top + 1 - entity.rect.h
+#                 #Check if player is more than 50 units into the ground from the top (should be only when player is not on terrain/on the side of the terrain)
+#                 else:
+#                     #Check which side of terrain player is colliding with
+#                     #Right
+#                     if entity.rect.left < obj.right and entity.rect.left > obj.right - 10:
+#                         entity.rect.left = obj.right
+#                     #Left
+#                     if entity.rect.right > obj.left and entity.rect.right < obj.left + 10:
+#                         entity.rect.right = obj.left
+#             elif entity.grounded == True:
+#                 entity.airTime = 0
+#         else:
+#             entity.grounded = False
+#             entity.yVelocity = entity.yVelocity + gAccel * entity.airTime
+#             entity.airTime += 1/FRAME_RATE
 
-    screen.fill((0, 0, 0))
+#     screen.fill((0, 0, 0))
     
-    for entity in all_sprites:
-        screen.blit(entity.surf,entity.rect)
-    pressed_keys = pygame.key.get_pressed()
-    player.update(pressed_keys)
-    player.updateYPos()
-    pygame.display.flip()
+#     for entity in all_sprites:
+#         screen.blit(entity.surf,entity.rect)
+#     pressed_keys = pygame.key.get_pressed()
+#     player.update(pressed_keys)
+#     player.updateYPos()
+#     pygame.display.flip()
 
-    clock.tick(FRAME_RATE)
+#     clock.tick(FRAME_RATE)

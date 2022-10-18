@@ -19,6 +19,8 @@ pygame.init()
 
 SCREEN_WIDTH = 1200
 SCREEN_HEIGHT = 900
+movement.SCREEN_HEIGHT = SCREEN_HEIGHT
+movement.SCREEN_WIDTH = SCREEN_WIDTH
 screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 screen.fill((0, 0, 0))
 
