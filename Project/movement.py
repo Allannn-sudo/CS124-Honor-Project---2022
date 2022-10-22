@@ -78,7 +78,7 @@ class Player(pygame.sprite.Sprite):
 
     def updateScor(self):
         if self.rect == (1125, 450):
-            score += 1
+            self.score += 1
 
     
 
