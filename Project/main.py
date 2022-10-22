@@ -38,6 +38,7 @@ surfaceFour = map.Terrain(200, 300, 1000, 600)
 surfaceFive = map.Terrain(100, 25, 0, 475)
 surfaceSix = map.Terrain(100, 25, 150, 375)
 surfaceSeven = map.Terrain(100, 175, 475, 425)
+surfaceHitToWin = map.Terrain(100, 25, 1100, 350)
 surfaceToCreate = map.Terrain(100, 25, 9999999, 99999999999)
 surfaceToCreate.surf.fill((255, 255, 255))
 #-----------------------------
@@ -58,6 +59,7 @@ all_sprites.add(surfaceFour)
 all_sprites.add(surfaceFive)
 all_sprites.add(surfaceSix)
 all_sprites.add(surfaceSeven)
+all_sprites.add(surfaceHitToWin)
 all_sprites.add(surfaceToCreate)
 all_sprites.add(player)
 
@@ -72,7 +74,24 @@ terrain.add(surfaceFour)
 terrain.add(surfaceFive)
 terrain.add(surfaceSix)
 terrain.add(surfaceSeven)
+terrain.add(surfaceHitToWin)
 terrain.add(surfaceToCreate)
+#-----------------------------
+
+
+#Score
+#-----------------------------
+white = (255, 255, 255)
+green = (0, 255, 0)
+blue = (0, 0, 128)
+black = (0, 0, 0)
+green = (0, 255, 0)
+display_surface = pygame.display.set_mode((0, 0))
+pygame.display.set_caption('Show Text')
+font = pygame.font.Font('freesansbold.ttf', 32)
+text = font.render('Score: ' + str(player.score), True, green, black)
+textRect = text.get_rect()
+textRect.topleft = (0, 0)
 #-----------------------------
 
 
@@ -124,6 +143,8 @@ while running:
 
     for obj in terrain:
         screen.blit(obj.surf,obj.rect)
+    
+    display_surface.blit(text, textRect)
     
     #Move surface three up and down
     surfaceThree.update()
