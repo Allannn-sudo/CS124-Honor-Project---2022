@@ -17,16 +17,20 @@ from pygame.locals import (
 )
 pygame.init()
 
+
+#Screen setup
+#-----------------------------
 SCREEN_WIDTH = 1200
 SCREEN_HEIGHT = 900
 movement.SCREEN_HEIGHT = SCREEN_HEIGHT
 movement.SCREEN_WIDTH = SCREEN_WIDTH
 screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 screen.fill((0, 0, 0))
+#-----------------------------
 
 
-
-#Move the block up and down at a constant speed
+#Blocks for the map
+#-----------------------------
 surfaceOne = map.Terrain(200, 300, 0, 600)
 surfaceTwo = map.Terrain(225, 350, 350, 500)
 surfaceThree = map.Terrain(175, 50, 700, 500)
@@ -36,7 +40,7 @@ surfaceSix = map.Terrain(100, 25, 150, 375)
 surfaceSeven = map.Terrain(100, 175, 475, 425)
 surfaceToCreate = map.Terrain(100, 25, 9999999, 99999999999)
 surfaceToCreate.surf.fill((255, 255, 255))
-
+#-----------------------------
 
 
 gAccel = 6
@@ -44,7 +48,8 @@ gAccel = 6
 player = movement.Player()
 
 
-
+#Add to sprite group
+#-----------------------------
 all_sprites = pygame.sprite.Group()
 all_sprites.add(surfaceOne)
 all_sprites.add(surfaceTwo)
@@ -59,8 +64,6 @@ all_sprites.add(player)
 gravity_obj = pygame.sprite.Group()
 gravity_obj.add(player)
 
-
-#Add blocks to sprite group
 terrain = pygame.sprite.Group()
 terrain.add(surfaceOne)
 terrain.add(surfaceTwo)
@@ -70,6 +73,7 @@ terrain.add(surfaceFive)
 terrain.add(surfaceSix)
 terrain.add(surfaceSeven)
 terrain.add(surfaceToCreate)
+#-----------------------------
 
 
 clock = pygame.time.Clock()
