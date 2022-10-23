@@ -45,11 +45,7 @@ class Terrain(pygame.sprite.Sprite):
         mouse_pos = pygame.mouse.get_pos()
         mouse_buttons = pygame.mouse.get_pressed()
         if any(mouse_buttons):
-            self.rect = self.surf.get_rect(
-                center=(
-                    mouse_pos
-                )
-            )
+            self.rect.center = (mouse_pos)
         screen.blit(self.surf, self.rect)
 
 

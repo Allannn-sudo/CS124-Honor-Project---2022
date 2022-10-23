@@ -14,14 +14,15 @@ from pygame.locals import (
     QUIT,
     K_LSHIFT,
     K_RSHIFT,
+    MOUSEBUTTONUP
 )
 pygame.init()
 
 
 #Screen setup
 #-----------------------------
-SCREEN_WIDTH = 1200
-SCREEN_HEIGHT = 900
+SCREEN_WIDTH = 1275
+SCREEN_HEIGHT = 800
 movement.SCREEN_HEIGHT = SCREEN_HEIGHT
 movement.SCREEN_WIDTH = SCREEN_WIDTH
 screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
@@ -29,19 +30,42 @@ screen.fill((0, 0, 0))
 #-----------------------------
 
 
+white = (255, 255, 255)
+green = (0, 255, 0)
+blue = (0, 0, 128)
+black = (0, 0, 0)
+green = (0, 255, 0)
+
+
 #Blocks for the map
-#-----------------------------
+#---------------
+#Blocks
 surfaceOne = map.Terrain(200, 300, 0, 600)
 surfaceTwo = map.Terrain(225, 350, 350, 500)
 surfaceThree = map.Terrain(175, 50, 700, 500)
-surfaceFour = map.Terrain(200, 300, 1000, 600)
+surfaceFour = map.Terrain(350, 300, 1100, 600)
 surfaceFive = map.Terrain(100, 25, 0, 475)
 surfaceSix = map.Terrain(100, 25, 150, 375)
 surfaceSeven = map.Terrain(100, 175, 475, 425)
-surfaceHitToWin = map.Terrain(100, 25, 1100, 350)
-surfaceToCreate = map.Terrain(100, 25, 9999999, 99999999999)
+#Obstacles
+surfaceToCreate = map.Terrain(100, 25, 0, 0)
 surfaceToCreate.surf.fill((255, 255, 255))
-#-----------------------------
+#Restart button
+RestartButton = map.Terrain(150, 150, 525, 325)
+RestartButton.rect.center = (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+RestartButton.surf.fill((255, 255, 255))
+
+#Text for restart button
+RestartButton.display_surface = pygame.display.set_mode((525, 325))
+pygame.display.set_caption('Show Text')
+RestartButton.font = pygame.font.Font('freesansbold.ttf', 32)
+RestartButton.text = RestartButton.font.render('Restart', True, green, white)
+RestartButton.textRect = RestartButton.text.get_rect(
+    center=(
+        SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2
+    )    
+)
+#---------------
 
 
 gAccel = 6
@@ -59,8 +83,6 @@ all_sprites.add(surfaceFour)
 all_sprites.add(surfaceFive)
 all_sprites.add(surfaceSix)
 all_sprites.add(surfaceSeven)
-all_sprites.add(surfaceHitToWin)
-all_sprites.add(surfaceToCreate)
 all_sprites.add(player)
 
 gravity_obj = pygame.sprite.Group()
@@ -74,19 +96,11 @@ terrain.add(surfaceFour)
 terrain.add(surfaceFive)
 terrain.add(surfaceSix)
 terrain.add(surfaceSeven)
-terrain.add(surfaceHitToWin)
-terrain.add(surfaceToCreate)
 #-----------------------------
 
 
 #Score
-#-----------------------------
-white = (255, 255, 255)
-green = (0, 255, 0)
-blue = (0, 0, 128)
-black = (0, 0, 0)
-green = (0, 255, 0)
-
+#---------------
 class Score(pygame.sprite.Sprite):
     def __init__(self):
         super(Score, self).__init__()
@@ -96,20 +110,25 @@ class Score(pygame.sprite.Sprite):
         self.score = 0
         self.text = self.font.render('Score: ' + str(self.score), True, green, black)
         self.textRect = self.text.get_rect()
-        self.restarted = True
+        self.newGame = True
 
+    #Change the score only once if the player reaches the end
     def update(self, Player):
-        if self.restarted == True:
-            if Player.rect.right == 1200:
-               self.score = self.score + 1
-               self.text = self.font.render('Score: ' + str(self.score), True, green, black)
-               self.restarted = False
-#-----------------------------
+        if self.newGame == True:
+            if Player.rect.right == SCREEN_WIDTH:
+                self.newGame = False
+                self.score = self.score + 1
+                self.text = self.font.render('Score: ' + str(self.score), True, green, black)
+#---------------
 score = Score()
 
 
 clock = pygame.time.Clock()
 FRAME_RATE = 60
+
+
+#----------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------
 
 running = True
 while running:
@@ -157,15 +176,26 @@ while running:
     for obj in terrain:
         screen.blit(obj.surf,obj.rect)
     
+    #Display score text and increase the score
     score.display_surface.blit(score.text, score.textRect)
-
-    #Increase score
     score.update(player)
     
     #Move surface three up and down
     surfaceThree.update()
     #Place the surface by mouse click
-    surfaceToCreate.update2()
+    if score.newGame == True:
+        surfaceToCreate.update2()
+
+    #Display restart button when player reaches the end
+    if score.newGame == False:
+        screen.blit(RestartButton.surf,RestartButton.rect)
+        RestartButton.display_surface.blit(RestartButton.text, RestartButton.textRect)
+        if event.type == pygame.MOUSEBUTTONUP:
+            mouse_pos = pygame.mouse.get_pos()
+            if RestartButton.rect.collidepoint(mouse_pos):
+                score.newGame = True
+                player.rect.left = 0
+                player.rect.top = 0
 
 
     pygame.display.flip()

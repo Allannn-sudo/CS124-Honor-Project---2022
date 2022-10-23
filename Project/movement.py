@@ -16,8 +16,8 @@ from pygame.locals import (
 
 pygame.init()
 
-SCREEN_WIDTH = 1200
-SCREEN_HEIGHT = 900
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 500
 
 
 
@@ -33,7 +33,6 @@ class Player(pygame.sprite.Sprite):
         self.grounded = False
         self.airTime = 0
         self.yVelocity = 0
-        self.score = 0
     def updateYPos(self):
         self.rect.move_ip(0, self.yVelocity)
     # Move the sprite based on user keypresses
@@ -76,9 +75,6 @@ class Player(pygame.sprite.Sprite):
         if self.rect.top >= SCREEN_HEIGHT:
             self.rect.top = SCREEN_HEIGHT
 
-    def updateScor(self):
-        if self.rect == (1125, 450):
-            self.score += 1
 
     
 
@@ -188,7 +184,6 @@ while running:
     pressed_keys = pygame.key.get_pressed()
     player.update(pressed_keys)
     player.updateYPos()
-    player.updateScor()
     pygame.display.flip()
 
     clock.tick(FRAME_RATE)
