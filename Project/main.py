@@ -43,12 +43,12 @@ green = (0, 255, 0)
 surfaceOne = map.Terrain(200, 300, 0, 600)
 surfaceTwo = map.Terrain(225, 350, 350, 500)
 surfaceThree = map.Terrain(175, 50, 700, 500)
-surfaceFour = map.Terrain(350, 300, 1100, 600)
+surfaceFour = map.Terrain(350, 300, 1000, 600)
 surfaceFive = map.Terrain(100, 25, 0, 475)
 surfaceSix = map.Terrain(100, 25, 150, 375)
 surfaceSeven = map.Terrain(100, 175, 475, 425)
 #Obstacles
-surfaceToCreate = map.Terrain(100, 25, 0, 0)
+surfaceToCreate = map.Terrain(100, 25, 999999999999999, 99999999999999999)
 surfaceToCreate.surf.fill((255, 255, 255))
 #Restart button
 RestartButton = map.Terrain(150, 150, 525, 325)
@@ -83,6 +83,7 @@ all_sprites.add(surfaceFour)
 all_sprites.add(surfaceFive)
 all_sprites.add(surfaceSix)
 all_sprites.add(surfaceSeven)
+all_sprites.add(surfaceToCreate)
 all_sprites.add(player)
 
 gravity_obj = pygame.sprite.Group()
@@ -96,6 +97,7 @@ terrain.add(surfaceFour)
 terrain.add(surfaceFive)
 terrain.add(surfaceSix)
 terrain.add(surfaceSeven)
+terrain.add(surfaceToCreate)
 #-----------------------------
 
 
