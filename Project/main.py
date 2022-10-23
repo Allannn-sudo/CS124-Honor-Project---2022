@@ -86,13 +86,26 @@ green = (0, 255, 0)
 blue = (0, 0, 128)
 black = (0, 0, 0)
 green = (0, 255, 0)
-display_surface = pygame.display.set_mode((0, 0))
-pygame.display.set_caption('Show Text')
-font = pygame.font.Font('freesansbold.ttf', 32)
-text = font.render('Score: ' + str(player.score), True, green, black)
-textRect = text.get_rect()
-textRect.topleft = (0, 0)
+
+class Score(pygame.sprite.Sprite):
+    def __init__(self):
+        super(Score, self).__init__()
+        self.display_surface = pygame.display.set_mode((0, 0))
+        pygame.display.set_caption('Show Text')
+        self.font = pygame.font.Font('freesansbold.ttf', 32)
+        self.score = 0
+        self.text = self.font.render('Score: ' + str(self.score), True, green, black)
+        self.textRect = self.text.get_rect()
+        self.restarted = True
+
+    def update(self, Player):
+        if self.restarted == True:
+            if Player.rect.right == 1200:
+               self.score = self.score + 1
+               self.text = self.font.render('Score: ' + str(self.score), True, green, black)
+               self.restarted = False
 #-----------------------------
+score = Score()
 
 
 clock = pygame.time.Clock()
@@ -144,7 +157,10 @@ while running:
     for obj in terrain:
         screen.blit(obj.surf,obj.rect)
     
-    display_surface.blit(text, textRect)
+    score.display_surface.blit(score.text, score.textRect)
+
+    #Increase score
+    score.update(player)
     
     #Move surface three up and down
     surfaceThree.update()
