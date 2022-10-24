@@ -25,26 +25,27 @@ SCREEN_HEIGHT = 600
 class Player(pygame.sprite.Sprite):
 
     def __init__(self):
+         # animation for movement
+        self.sprites = []
+        self.is_animation = False
+        self.sprites.append(pygame.image.load('basic.png'))
+        self.sprites.append(pygame.image.load('move1.png'))
+        self.sprites.append(pygame.image.load('basic.png'))
+        self.sprites.append(pygame.image.load('move2.png'))
+        self.current_sprite = 0
+        self.image = self.sprites[self.current_sprite]
+
         super(Player, self).__init__()
         self.surf = pygame.Surface((75,150))
         self.surf.fill((255,255,255))
-        self.surf = pygame.image.load("basic.jpeg").convert()
+        self.surf = self.image.convert()
         # self.surf.set_colorkey((255,255,255), RLEACCEL)
         self.rect = self.surf.get_rect()
         self.grounded = False
         self.airTime = 0
         self.yVelocity = 0
 
-        # animation for movement
-        self.sprites = []
-        self.is_animation = False
-        self.sprites.append(pygame.image.load('basic.jpeg'))
-        self.sprites.append(pygame.image.load('move1.jpeg'))
-        self.sprites.append(pygame.image.load('basic.jpeg'))
-        self.sprites.append(pygame.image.load('move2.jpeg'))
-        self.current_sprite = 0
-        self.image = self.sprites[self.current_sprite]
-
+       
     def updateYPos(self):
         self.rect.move_ip(0, self.yVelocity)
 
@@ -60,23 +61,25 @@ class Player(pygame.sprite.Sprite):
 
     def update(self, pressed_keys):
         if pressed_keys[K_LEFT]:
+            # player animation
+            self.update_animation
+            self.surf = self.image.convert()
+            
             if pressed_keys[K_LSHIFT or K_RSHIFT]: # add shift for speeding up
                 self.rect.move_ip(-10, 0)
             else : 
                 self.rect.move_ip(-5, 0)
 
+
+        if pressed_keys[K_RIGHT]:
             # player animation
             self.update_animation
-            self.surf = self.image.convert()
-            
-        if pressed_keys[K_RIGHT]:
+            self.surf = pygame.transform.flip(self.image, True, False)
+
             if pressed_keys[K_LSHIFT or K_RSHIFT]: # add shift for speeding up
                 self.rect.move_ip(10, 0)
             else : 
                 self.rect.move_ip(5, 0)
-            # player animation
-            self.update_animation
-            self.surf = pygame.transform.flip(self.image, True, False)
 
         if pressed_keys[K_UP]:
             # add double jump - which can only jump twice
