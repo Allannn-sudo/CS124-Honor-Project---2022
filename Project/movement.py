@@ -33,8 +33,8 @@ class Player(pygame.sprite.Sprite):
         self.grounded = False
         self.airTime = 0
         self.yVelocity = 0
-    def updateYPos(self):
-        self.rect.move_ip(0, self.yVelocity)
+    # def updateYPos(self):
+        
     # Move the sprite based on user keypresses
     def update(self, pressed_keys):
         if pressed_keys[K_LEFT]:
