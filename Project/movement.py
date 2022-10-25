@@ -12,6 +12,10 @@ from pygame.locals import (
     QUIT,
     K_LSHIFT,
     K_RSHIFT,
+    K_a,
+    K_s,
+    K_d,
+    K_w,
 )
 
 pygame.init()
@@ -63,6 +67,61 @@ class Player(pygame.sprite.Sprite):
             if self.yVelocity < 0:
                 self.yVelocity = -15
 
+
+        # Keep player on the screen
+        if self.rect.left < 0:
+            self.rect.left = 0
+        if self.rect.right > SCREEN_WIDTH:
+            self.rect.right = SCREEN_WIDTH
+        if self.rect.top < 0:
+            self.rect.top = 0
+            self.yVelocity = 0
+        if self.rect.top >= SCREEN_HEIGHT:
+            self.rect.top = SCREEN_HEIGHT
+
+#Second Player
+class Player_1(pygame.sprite.Sprite):
+    def __init__(self):
+        super(Player_1, self).__init__()
+        self.surf = pygame.Surface((75, 150))
+        self.surf.fill((255, 255, 255))
+        self.surf = pygame.image.load("basic.jpeg").convert()
+        # self.surf.set_colorkey((255,255,255), RLEACCEL)
+        self.rect = self.surf.get_rect()
+        self.grounded = False
+        self.airTime = 0
+        self.yVelocity = 0
+
+    def updateYPos(self):
+        self.rect.move_ip(0, self.yVelocity)
+
+    # Move the sprite based on user keypresses
+    def update(self, pressed_keys):
+        if pressed_keys[K_a]:
+            if pressed_keys[K_LSHIFT or K_RSHIFT]:  # add shift for speeding up
+                self.rect.move_ip(-10, 0)
+            else:
+                self.rect.move_ip(-5, 0)
+            # player animation
+            self.surf = pygame.image.load("move1.jpeg").convert()
+        if pressed_keys[K_d]:
+            if pressed_keys[K_LSHIFT or K_RSHIFT]:  # add shift for speeding up
+                self.rect.move_ip(10, 0)
+            else:
+                self.rect.move_ip(5, 0)
+            # player animation
+            self.surf = pygame.transform.flip(pygame.image.load("move1.jpeg").convert(), True, False)
+        if pressed_keys[K_w]:
+            # add double jump - which can only jump twice
+            DOUBLEJUMP = 0
+            if self.grounded:
+                if (DOUBLEJUMP < 2):
+                    self.grounded = False
+                self.yVelocity = -15
+                DOUBLEJUMP += 1
+
+            if self.yVelocity < 0:
+                self.yVelocity = -15
 
         # Keep player on the screen
         if self.rect.left < 0:

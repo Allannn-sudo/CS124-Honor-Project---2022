@@ -14,6 +14,10 @@ from pygame.locals import (
     QUIT,
     K_LSHIFT,
     K_RSHIFT,
+    K_w,
+    K_a,
+    K_s,
+    K_d,
 )
 pygame.init()
 
@@ -40,6 +44,7 @@ surfaceToCreate.surf.fill((255, 255, 255))
 gAccel = 6
 
 player = movement.Player()
+player1 = movement.Player_1()
 
 
 
@@ -53,10 +58,11 @@ all_sprites.add(surfaceSix)
 all_sprites.add(surfaceSeven)
 all_sprites.add(surfaceToCreate)
 all_sprites.add(player)
+all_sprites.add(player1)
 
 gravity_obj = pygame.sprite.Group()
 gravity_obj.add(player)
-
+gravity_obj.add(player1)
 
 #Add blocks to sprite group
 terrain = pygame.sprite.Group()
@@ -115,6 +121,8 @@ while running:
     pressed_keys = pygame.key.get_pressed()
     player.update(pressed_keys)
     player.updateYPos()
+    player1.update(pressed_keys)
+    player1.updateYPos()
 
     for obj in terrain:
         screen.blit(obj.surf,obj.rect)
