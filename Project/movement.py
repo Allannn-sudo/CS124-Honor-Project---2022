@@ -78,7 +78,21 @@ class Player(pygame.sprite.Sprite):
         if self.rect.top >= SCREEN_HEIGHT:
             self.rect.top = SCREEN_HEIGHT
 
-    def update2(self, pressed_keys):
+class Player_2(pygame.sprite.Sprite):
+    def __init__(self):
+        super(Player, self).__init__()
+        self.surf = pygame.Surface((75,150))
+        self.surf.fill((255,255,255))
+        self.surf = pygame.image.load("basic.jpeg").convert()
+        # self.surf.set_colorkey((255,255,255), RLEACCEL)
+        self.rect = self.surf.get_rect()
+        self.grounded = False
+        self.airTime = 0
+        self.yVelocity = 0
+    def updateYPos(self):
+        self.rect.move_ip(0, self.yVelocity)
+    # Move the sprite based on user keypresses
+    def update(self, pressed_keys):
         if pressed_keys[K_a]:
             if pressed_keys[K_LSHIFT or K_RSHIFT]: # add shift for speeding up
                 self.rect.move_ip(-10, 0)
@@ -116,6 +130,7 @@ class Player(pygame.sprite.Sprite):
             self.yVelocity = 0
         if self.rect.top >= SCREEN_HEIGHT:
             self.rect.top = SCREEN_HEIGHT
+
 
 #Terrain code from map.py
 class Terrain(pygame.sprite.Sprite):
@@ -167,6 +182,7 @@ all_sprites.add(testTerrain2)
 all_sprites.add(testTerrain3)
 
 gravity_obj.add(player)
+
 
 #temporary
 terrain.add(testTerrain)
