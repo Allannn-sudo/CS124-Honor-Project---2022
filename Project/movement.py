@@ -20,14 +20,14 @@ from pygame.locals import (
 
 pygame.init()
 
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
+SCREEN_WIDTH = 1275
+SCREEN_HEIGHT = 800
 
 
 
 #Classes---------------------
 class Player(pygame.sprite.Sprite):
-    def __init__(self, upbutton, leftbutton, rightbutton):
+    def __init__(self, upbutton, leftbutton, rightbutton, playerNumber):
         super(Player, self).__init__()
         self.surf = pygame.Surface((75,150))
         self.surf.fill((255,255,255))
@@ -40,6 +40,8 @@ class Player(pygame.sprite.Sprite):
         self.up = upbutton
         self.left = leftbutton
         self.right = rightbutton
+        self.score = 0
+        self.playerNumber = playerNumber
     def updateYPos(self):
         self.rect.move_ip(0, self.yVelocity)
     # Move the sprite based on user keypresses

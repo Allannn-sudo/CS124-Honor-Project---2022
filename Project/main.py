@@ -3,6 +3,7 @@ import map
 import movement
 import importlib
 importlib.reload(movement)
+importlib.reload(map)
 from cgi import test
 from turtle import Screen
 from math import sqrt as root
@@ -16,6 +17,7 @@ from pygame.locals import (
     QUIT,
     K_LSHIFT,
     K_RSHIFT,
+    MOUSEBUTTONUP,
     K_w,
     K_a,
     K_s,
@@ -24,10 +26,16 @@ from pygame.locals import (
 
 pygame.init()
 
-SCREEN_WIDTH = 1200
-SCREEN_HEIGHT = 900
+SCREEN_WIDTH = 1275
+SCREEN_HEIGHT = 800
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 screen.fill((0, 0, 0))
+
+white = (255, 255, 255)
+green = (0, 255, 0)
+blue = (0, 0, 128)
+black = (0, 0, 0)
+green = (0, 255, 0)
 
 # Move the block up and down at a constant speed
 surfaceOne = map.Terrain(200, 300, 0, 600)
@@ -40,10 +48,26 @@ surfaceSeven = map.Terrain(100, 175, 475, 425)
 surfaceToCreate = map.Terrain(100, 25, 9999999, 99999999999)
 surfaceToCreate.surf.fill((255, 255, 255))
 
+#Restart button
+RestartButton = map.Terrain(150, 150, 525, 325)
+RestartButton.rect.center = (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+RestartButton.surf.fill((255, 255, 255))
+
+#Text for restart button
+RestartButton.display_surface = pygame.display.set_mode((525, 325))
+pygame.display.set_caption('Show Text')
+RestartButton.font = pygame.font.Font('freesansbold.ttf', 32)
+RestartButton.text = RestartButton.font.render('Restart', True, green, white)
+RestartButton.textRect = RestartButton.text.get_rect(
+    center=(
+        SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2
+    )    
+)
+
 gAccel = 6
 
-player1 = movement.Player(K_UP, K_LEFT, K_RIGHT)
-player2 = movement.Player(K_w, K_a, K_d)
+player1 = movement.Player(K_UP, K_LEFT, K_RIGHT, 1)
+player2 = movement.Player(K_w, K_a, K_d, 2)
 
 all_sprites = pygame.sprite.Group()
 all_sprites.add(surfaceOne)
@@ -75,6 +99,27 @@ terrain.add(surfaceFive)
 terrain.add(surfaceSix)
 terrain.add(surfaceSeven)
 terrain.add(surfaceToCreate)
+
+
+newGame = True
+#Score
+#---------------
+class Score(pygame.sprite.Sprite):
+    def __init__(self, Player):
+        super(Score, self).__init__()
+        self.display_surface = pygame.display.set_mode((0, 0))
+        pygame.display.set_caption('Show Text')
+        self.font = pygame.font.Font('freesansbold.ttf', 32)
+        self.text = self.font.render('Player ' + str(Player.playerNumber) + ': ' + str(Player.score), True, green, black)
+        self.textRect = self.text.get_rect()
+        self.scoreNumber = Player.playerNumber
+#---------------
+score1 = Score(player1)
+score2 = Score(player2)
+scores = pygame.sprite.Group()
+scores.add(score1)
+scores.add(score2)
+
 
 clock = pygame.time.Clock()
 FRAME_RATE = 60
@@ -123,6 +168,39 @@ while running:
     for player in players:
         player.update(pressed_keys)
         player.updateYPos()
+    
+    #Display score text and increase the score
+    score1.display_surface.blit(score1.text, score1.textRect)
+    score2.display_surface.blit(score2.text, (0, 40))
+
+    #If the game is processing
+    if newGame == True:
+        #Place block
+        surfaceToCreate.update2()
+        for player in players:
+            #When one of the players reaches the end
+            if player.rect.right == SCREEN_WIDTH:
+                #score plus one
+                player.score = player.score + 1
+                for score in scores:
+                    if score.scoreNumber == player.playerNumber:
+                        score.text = score.font.render('Player ' + str(player.playerNumber) + ': ' + str(player.score), True, green, black)
+                #Jump to restarting game
+                newGame = False
+
+    #If it goes to restarting the game
+    else:
+        #Show the restart button
+        screen.blit(RestartButton.surf,RestartButton.rect)
+        RestartButton.display_surface.blit(RestartButton.text, RestartButton.textRect)
+        #If the button is clicked, restart the game
+        if event.type == pygame.MOUSEBUTTONUP:
+            mouse_pos = pygame.mouse.get_pos()
+            if RestartButton.rect.collidepoint(mouse_pos):
+                for player in players:
+                    player.rect.top = 0
+                    player.rect.left = 0
+                newGame = True
 
 
     for obj in terrain:
