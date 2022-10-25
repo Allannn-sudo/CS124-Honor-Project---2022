@@ -52,6 +52,8 @@ class Terrain(pygame.sprite.Sprite):
             )
         screen.blit(self.surf, self.rect)
 
+        
+
 
 #Create blocks
 surfaceOne = Terrain(200, 300, 0, 600)

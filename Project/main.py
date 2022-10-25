@@ -194,13 +194,14 @@ while running:
         screen.blit(RestartButton.surf,RestartButton.rect)
         RestartButton.display_surface.blit(RestartButton.text, RestartButton.textRect)
         #If the button is clicked, restart the game
-        if event.type == pygame.MOUSEBUTTONUP:
-            mouse_pos = pygame.mouse.get_pos()
-            if RestartButton.rect.collidepoint(mouse_pos):
-                for player in players:
-                    player.rect.top = 0
-                    player.rect.left = 0
-                newGame = True
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONUP:
+                mouse_pos = pygame.mouse.get_pos()
+                if RestartButton.rect.collidepoint(mouse_pos):
+                    for player in players:
+                        player.rect.top = 0
+                        player.rect.left = 0
+                    newGame = True
 
 
     for obj in terrain:
