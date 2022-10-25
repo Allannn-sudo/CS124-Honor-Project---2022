@@ -17,17 +17,36 @@ from pygame.locals import (
 pygame.init()
 
 SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 500
+SCREEN_HEIGHT = 600
 
 
 
 #Classes---------------------
+#Background class
+class Background(pygame.sprite.Sprite):
+    def __init__(self, image_file, location):
+        self.image = pygame.image.load(image_file)
+        self.image = pygame.transform.scale(self.image,(SCREEN_WIDTH, SCREEN_HEIGHT))
+        self.rect = self.image.get_rect()
+        self.rect.left, self.rect.top = location
+
 class Player(pygame.sprite.Sprite):
+
     def __init__(self):
+         # animation for movement
+        self.sprites = []
+        self.is_animation = False
+        self.sprites.append(pygame.image.load('basic.png'))
+        self.sprites.append(pygame.image.load('move1.png'))
+        self.sprites.append(pygame.image.load('basic.png'))
+        self.sprites.append(pygame.image.load('move2.png'))
+        self.current_sprite = 0
+        self.image = self.sprites[self.current_sprite]
+
         super(Player, self).__init__()
         self.surf = pygame.Surface((75,150))
         self.surf.fill((255,255,255))
-        self.surf = pygame.image.load("basic.jpeg").convert()
+        self.surf = self.image.convert()
         # self.surf.set_colorkey((255,255,255), RLEACCEL)
         self.rect = self.surf.get_rect()
         self.grounded = False
@@ -36,21 +55,34 @@ class Player(pygame.sprite.Sprite):
     # def updateYPos(self):
         
     # Move the sprite based on user keypresses
+    def update_animation(self):
+        self.current_sprite += 1
+        if self.current_sprite >= len(self.sprites):
+            self.current_sprite = 0
+        self.image = self.sprites[self.current_sprite]
+
     def update(self, pressed_keys):
         if pressed_keys[K_LEFT]:
+            # player animation
+            self.update_animation
+            self.surf = self.image.convert()
+            
             if pressed_keys[K_LSHIFT or K_RSHIFT]: # add shift for speeding up
                 self.rect.move_ip(-10, 0)
             else : 
                 self.rect.move_ip(-5, 0)
-            # player animation
-            self.surf = pygame.image.load("move1.jpeg").convert()
+
+
         if pressed_keys[K_RIGHT]:
+            # player animation
+            self.update_animation
+            self.surf = pygame.transform.flip(self.image, True, False)
+
             if pressed_keys[K_LSHIFT or K_RSHIFT]: # add shift for speeding up
                 self.rect.move_ip(10, 0)
             else : 
                 self.rect.move_ip(5, 0)
-            # player animation
-            self.surf = pygame.transform.flip(pygame.image.load("move1.jpeg").convert(), True, False)
+
         if pressed_keys[K_UP]:
             # add double jump - which can only jump twice
             DOUBLEJUMP = 0
@@ -74,10 +106,6 @@ class Player(pygame.sprite.Sprite):
             self.yVelocity = 0
         if self.rect.top >= SCREEN_HEIGHT:
             self.rect.top = SCREEN_HEIGHT
-
-
-    
-
 
 #Terrain code from map.py
 class Terrain(pygame.sprite.Sprite):
@@ -136,54 +164,59 @@ terrain.add(testTerrain2)
 terrain.add(testTerrain3)
 
 
-# clock = pygame.time.Clock()
-# FRAME_RATE = 60
+clock = pygame.time.Clock()
+FRAME_RATE = 60
 
-# running = True
-# #Game Loop-------------------
-# while running:
-#     for event in pygame.event.get():
-#         if event.type == KEYDOWN:
-#             if event.key == K_ESCAPE:
-#                 running = False
-#         elif event.type == QUIT:
-#             running = False
+running = True
+#Game Loop-------------------
+while running:
+    for event in pygame.event.get():
+        if event.type == KEYDOWN:
+            if event.key == K_ESCAPE:
+                running = False
+        elif event.type == QUIT:
+            running = False
 
     
-#     #GRAVITY
-#     for entity in gravity_obj:
-#         if pygame.sprite.spritecollideany(entity, terrain):
-#             obj = pygame.sprite.spritecollideany(entity, terrain).rect
-#             if entity.grounded == False:
-#                 #Check if player is less than 50 units into the ground from the top (should be only when player lands on top of terrain)
-#                 if entity.rect.right > obj.left and entity.rect.left < obj.right and entity.rect.bottom < obj.top + 50:
-#                     entity.grounded = True
-#                     entity.airTime = 0
-#                     entity.yVelocity = 0
-#                     entity.rect.y = obj.top + 1 - entity.rect.h
-#                 #Check if player is more than 50 units into the ground from the top (should be only when player is not on terrain/on the side of the terrain)
-#                 else:
-#                     #Check which side of terrain player is colliding with
-#                     #Right
-#                     if entity.rect.left < obj.right and entity.rect.left > obj.right - 10:
-#                         entity.rect.left = obj.right
-#                     #Left
-#                     if entity.rect.right > obj.left and entity.rect.right < obj.left + 10:
-#                         entity.rect.right = obj.left
-#             elif entity.grounded == True:
-#                 entity.airTime = 0
-#         else:
-#             entity.grounded = False
-#             entity.yVelocity = entity.yVelocity + gAccel * entity.airTime
-#             entity.airTime += 1/FRAME_RATE
-
-#     screen.fill((0, 0, 0))
+    #GRAVITY
+    for entity in gravity_obj:
+        if pygame.sprite.spritecollideany(entity, terrain):
+            obj = pygame.sprite.spritecollideany(entity, terrain).rect
+            if entity.grounded == False:
+                #Check if player is less than 50 units into the ground from the top (should be only when player lands on top of terrain)
+                if entity.rect.right > obj.left and entity.rect.left < obj.right and entity.rect.bottom < obj.top + 50:
+                    entity.grounded = True
+                    entity.airTime = 0
+                    entity.yVelocity = 0
+                    entity.rect.y = obj.top + 1 - entity.rect.h
+                #Check if player is more than 50 units into the ground from the top (should be only when player is not on terrain/on the side of the terrain)
+                else:
+                    #Check which side of terrain player is colliding with
+                    #Right
+                    if entity.rect.left < obj.right and entity.rect.left > obj.right - 10:
+                        entity.rect.left = obj.right
+                    #Left
+                    if entity.rect.right > obj.left and entity.rect.right < obj.left + 10:
+                        entity.rect.right = obj.left
+            elif entity.grounded == True:
+                entity.airTime = 0
+        else:
+            entity.grounded = False
+            entity.yVelocity = entity.yVelocity + gAccel * entity.airTime
+            entity.airTime += 1/FRAME_RATE
     
-#     for entity in all_sprites:
-#         screen.blit(entity.surf,entity.rect)
-#     pressed_keys = pygame.key.get_pressed()
-#     player.update(pressed_keys)
-#     player.updateYPos()
-#     pygame.display.flip()
 
-#     clock.tick(FRAME_RATE)
+    # use the first background
+
+    BackGround = Background('backGround.jpeg', [0,0])
+    screen.fill([0, 0, 0])
+    screen.blit(BackGround.image, BackGround.rect)
+    
+    for entity in all_sprites:
+        screen.blit(entity.surf,entity.rect)
+    pressed_keys = pygame.key.get_pressed()
+    player.update(pressed_keys)
+    player.updateYPos()
+    pygame.display.flip()
+
+    clock.tick(FRAME_RATE)
