@@ -74,7 +74,7 @@ RestartButton.textRect = RestartButton.text.get_rect(
 gAccel = 6
 
 player1 = movement.Player()
-player2 = movement.Player()
+player2 = movement.Player_2()
 
 
 
@@ -183,7 +183,7 @@ while running:
     pressed_keys = pygame.key.get_pressed()
     player1.update(pressed_keys)
     player1.updateYPos()
-    player2.update2(pressed_keys)
+    player2.update(pressed_keys)
     player2.updateYPos()
 
     for obj in terrain:
