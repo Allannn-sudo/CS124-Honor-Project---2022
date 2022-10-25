@@ -12,6 +12,9 @@ from pygame.locals import (
     QUIT,
     K_LSHIFT,
     K_RSHIFT,
+    K_w,
+    K_a,
+    K_d
 )
 
 pygame.init()
@@ -52,6 +55,45 @@ class Player(pygame.sprite.Sprite):
             # player animation
             self.surf = pygame.transform.flip(pygame.image.load("move1.jpeg").convert(), True, False)
         if pressed_keys[K_UP]:
+            # add double jump - which can only jump twice
+            DOUBLEJUMP = 0
+            if self.grounded:
+                if (DOUBLEJUMP < 2): 
+                    self.grounded = False
+                self.yVelocity = -15
+                DOUBLEJUMP += 1
+                
+            if self.yVelocity < 0:
+                self.yVelocity = -15
+
+
+        # Keep player on the screen
+        if self.rect.left < 0:
+            self.rect.left = 0
+        if self.rect.right > SCREEN_WIDTH:
+            self.rect.right = SCREEN_WIDTH
+        if self.rect.top < 0:
+            self.rect.top = 0
+            self.yVelocity = 0
+        if self.rect.top >= SCREEN_HEIGHT:
+            self.rect.top = SCREEN_HEIGHT
+
+    def update2(self, pressed_keys):
+        if pressed_keys[K_a]:
+            if pressed_keys[K_LSHIFT or K_RSHIFT]: # add shift for speeding up
+                self.rect.move_ip(-10, 0)
+            else : 
+                self.rect.move_ip(-5, 0)
+            # player animation
+            self.surf = pygame.image.load("move1.jpeg").convert()
+        if pressed_keys[K_d]:
+            if pressed_keys[K_LSHIFT or K_RSHIFT]: # add shift for speeding up
+                self.rect.move_ip(10, 0)
+            else : 
+                self.rect.move_ip(5, 0)
+            # player animation
+            self.surf = pygame.transform.flip(pygame.image.load("move1.jpeg").convert(), True, False)
+        if pressed_keys[K_w]:
             # add double jump - which can only jump twice
             DOUBLEJUMP = 0
             if self.grounded:
