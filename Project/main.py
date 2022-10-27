@@ -2,8 +2,8 @@ import pygame
 import map
 import movement
 import importlib
-importlib.reload(movement)
-importlib.reload(map)
+#importlib.reload(movement)
+#importlib.reload(map)
 from cgi import test
 from turtle import Screen
 from math import sqrt as root
@@ -41,28 +41,28 @@ green = (0, 255, 0)
 surfaceOne = map.Terrain(200, 300, 0, 600)
 surfaceTwo = map.Terrain(225, 350, 350, 500)
 surfaceThree = map.Terrain(175, 50, 700, 500)
-surfaceFour = map.Terrain(200, 300, 1000, 600)
+surfaceFour = map.Terrain(300, 300, 1000, 600)
 surfaceFive = map.Terrain(100, 25, 0, 475)
 surfaceSix = map.Terrain(100, 25, 150, 375)
 surfaceSeven = map.Terrain(100, 175, 475, 425)
 surfaceToCreate = map.Terrain(100, 25, 9999999, 99999999999)
 surfaceToCreate.surf.fill((255, 255, 255))
 
-#Restart button
-RestartButton = map.Terrain(150, 150, 525, 325)
-RestartButton.rect.center = (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
-RestartButton.surf.fill((255, 255, 255))
+#Restart button(Don't need it anymore with new Button class)
+#RestartButton = map.Terrain(150, 150, 525, 325)
+#RestartButton.rect.center = (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+#RestartButton.surf.fill((255, 255, 255))
 
-#Text for restart button
-RestartButton.display_surface = pygame.display.set_mode((525, 325))
-pygame.display.set_caption('Show Text')
-RestartButton.font = pygame.font.Font('freesansbold.ttf', 32)
-RestartButton.text = RestartButton.font.render('Restart', True, green, white)
-RestartButton.textRect = RestartButton.text.get_rect(
-    center=(
-        SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2
-    )    
-)
+#Text for restart button(Don't need it anymore with new Button class)
+#RestartButton.display_surface = pygame.display.set_mode((525, 325))
+#pygame.display.set_caption('Show Text')
+#RestartButton.font = pygame.font.Font('freesansbold.ttf', 32)
+#RestartButton.text = RestartButton.font.render('Restart', True, green, white)
+#RestartButton.textRect = RestartButton.text.get_rect(
+#    center=(
+#        SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2
+#    )    
+#)
 
 gAccel = 6
 
@@ -110,7 +110,7 @@ class Score(pygame.sprite.Sprite):
         self.display_surface = pygame.display.set_mode((0, 0))
         pygame.display.set_caption('Show Text')
         self.font = pygame.font.Font('freesansbold.ttf', 32)
-        self.text = self.font.render('Player ' + str(Player.playerNumber) + ': ' + str(Player.score), True, green, black)
+        self.text = self.font.render('Player ' + str(Player.playerNumber) + ': ' + str(Player.score), True, green)
         self.textRect = self.text.get_rect()
         self.scoreNumber = Player.playerNumber
 #---------------
@@ -119,6 +119,32 @@ score2 = Score(player2)
 scores = pygame.sprite.Group()
 scores.add(score1)
 scores.add(score2)
+
+
+restart_image = pygame.image.load('restartbutton.jpeg').convert_alpha()
+#Button
+#-------------------------
+class Button(pygame.sprite.Sprite):
+    def __init__(self, x, y, image, scale):
+        width = image.get_width()
+        height = image.get_height()
+        self.image = pygame.transform.scale(image, (int(width * scale), int(height * scale)))
+        self.rect = self.image.get_rect()
+        self.rect.center = (x, y)
+        self.clicked = False
+    
+    def draw(self):
+        pos = pygame.mouse.get_pos()
+
+        if self.rect.collidepoint(pos):
+            if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False:
+                self.clicked = True
+            if pygame.mouse.get_pressed()[0] == 0:
+                self.clicked = False
+        
+        screen.blit(self.image, (self.rect.x, self.rect.y))
+#-------------------------
+restartButton = Button(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, restart_image, 1)
 
 
 clock = pygame.time.Clock()
@@ -191,17 +217,13 @@ while running:
     #If it goes to restarting the game
     else:
         #Show the restart button
-        screen.blit(RestartButton.surf,RestartButton.rect)
-        RestartButton.display_surface.blit(RestartButton.text, RestartButton.textRect)
+        restartButton.draw()
         #If the button is clicked, restart the game
-        for event in pygame.event.get():
-            if event.type == pygame.MOUSEBUTTONUP:
-                mouse_pos = pygame.mouse.get_pos()
-                if RestartButton.rect.collidepoint(mouse_pos):
-                    for player in players:
-                        player.rect.top = 0
-                        player.rect.left = 0
-                    newGame = True
+        if restartButton.clicked:
+            for player in players:
+                player.rect.top = 0
+                player.rect.left = 0
+            newGame = True
 
 
     for obj in terrain:
@@ -209,10 +231,8 @@ while running:
 
     # Move surface three up and down
     surfaceThree.update()
-    # Place the surface by mouse click
-    surfaceToCreate.update2()
+
 
     pygame.display.flip()
 
     clock.tick(FRAME_RATE)
-
