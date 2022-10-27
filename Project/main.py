@@ -132,6 +132,7 @@ class Button(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
         self.clicked = False
+        self.clicked_Then_Released = 0
     
     def draw(self):
         pos = pygame.mouse.get_pos()
@@ -139,8 +140,11 @@ class Button(pygame.sprite.Sprite):
         if self.rect.collidepoint(pos):
             if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False:
                 self.clicked = True
-            if pygame.mouse.get_pressed()[0] == 0:
+                self.clicked_Then_Released = 1
+            if pygame.mouse.get_pressed()[0] == 0 and self.clicked_Then_Released == 1:
                 self.clicked = False
+                self.clicked_Then_Released = 2
+
         
         screen.blit(self.image, (self.rect.x, self.rect.y))
 #-------------------------
@@ -220,7 +224,7 @@ while running:
         #Show the restart button
         restartButton.draw()
         #If the button is clicked, restart the game
-        if restartButton.clicked:
+        if restartButton.clicked_Then_Released == 2:
             for player in players:
                 player.rect.top = 0
                 player.rect.left = 0
@@ -232,6 +236,7 @@ while running:
             if player.score == 5:
                 running = False
         if restartButton.clicked == False:
+            restartButton.clicked_Then_Released = 0
             newGame = 0
 
 
