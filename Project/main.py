@@ -101,7 +101,7 @@ terrain.add(surfaceSeven)
 terrain.add(surfaceToCreate)
 
 
-newGame = True
+newGame = 0
 #Score
 #---------------
 class Score(pygame.sprite.Sprite):
@@ -200,9 +200,10 @@ while running:
     score2.display_surface.blit(score2.text, (0, 40))
 
     #If the game is processing
-    if newGame == True:
+    if newGame == 0:
         #Place block
-        surfaceToCreate.update2()
+        if restartButton.clicked == False:
+            surfaceToCreate.update2()
         for player in players:
             #When one of the players reaches the end
             if player.rect.right == SCREEN_WIDTH:
@@ -212,10 +213,10 @@ while running:
                     if score.scoreNumber == player.playerNumber:
                         score.text = score.font.render('Player ' + str(player.playerNumber) + ': ' + str(player.score), True, green, black)
                 #Jump to restarting game
-                newGame = False
+                newGame += 1
 
     #If it goes to restarting the game
-    else:
+    if newGame == 1:
         #Show the restart button
         restartButton.draw()
         #If the button is clicked, restart the game
@@ -223,7 +224,15 @@ while running:
             for player in players:
                 player.rect.top = 0
                 player.rect.left = 0
-            newGame = True
+            newGame += 1
+        
+    if newGame == 2:
+        restartButton.draw()
+        for player in players:
+            if player.score == 5:
+                running = False
+        if restartButton.clicked == False:
+            newGame = 0
 
 
     for obj in terrain:
