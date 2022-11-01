@@ -7,6 +7,7 @@ from pygame.locals import (
     K_ESCAPE,
     KEYDOWN,
     QUIT,
+    MOUSEBUTTONDOWN
 )
 pygame.init()
 
@@ -48,6 +49,8 @@ class Terrain(pygame.sprite.Sprite):
             self.rect.center = (mouse_pos)
         screen.blit(self.surf, self.rect)
 
+        
+
 
 #Create blocks
 surfaceOne = Terrain(200, 300, 0, 600)
@@ -57,7 +60,7 @@ surfaceFour = Terrain(200, 300, 1000, 600)
 surfaceFive = Terrain(100, 25, 0, 475)
 surfaceSix = Terrain(100, 25, 150, 375)
 surfaceSeven = Terrain(100, 175, 475, 425)
-surfaceToCreate = Terrain(100, 25, 9999999, 99999999999)
+surfaceToCreate = Terrain(100, 25, 1200, 900)
 surfaceToCreate.surf.fill((255, 255, 255))
 
 

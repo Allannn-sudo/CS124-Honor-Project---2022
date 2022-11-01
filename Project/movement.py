@@ -12,18 +12,24 @@ from pygame.locals import (
     QUIT,
     K_LSHIFT,
     K_RSHIFT,
+    K_a,
+    K_s,
+    K_d,
+    K_w,
 )
 
 pygame.init()
 
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 500
+
+SCREEN_WIDTH = 1275
+SCREEN_HEIGHT = 800
+
 
 
 
 #Classes---------------------
 class Player(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, upbutton, leftbutton, rightbutton, playerNumber):
         super(Player, self).__init__()
         self.surf = pygame.Surface((75,150))
         self.surf.fill((255,255,255))
@@ -33,25 +39,30 @@ class Player(pygame.sprite.Sprite):
         self.grounded = False
         self.airTime = 0
         self.yVelocity = 0
+        self.up = upbutton
+        self.left = leftbutton
+        self.right = rightbutton
+        self.score = 0
+        self.playerNumber = playerNumber
     def updateYPos(self):
         self.rect.move_ip(0, self.yVelocity)
     # Move the sprite based on user keypresses
     def update(self, pressed_keys):
-        if pressed_keys[K_LEFT]:
+        if pressed_keys[self.left]:
             if pressed_keys[K_LSHIFT or K_RSHIFT]: # add shift for speeding up
                 self.rect.move_ip(-10, 0)
             else : 
                 self.rect.move_ip(-5, 0)
             # player animation
             self.surf = pygame.image.load("move1.jpeg").convert()
-        if pressed_keys[K_RIGHT]:
+        if pressed_keys[self.right]:
             if pressed_keys[K_LSHIFT or K_RSHIFT]: # add shift for speeding up
                 self.rect.move_ip(10, 0)
             else : 
                 self.rect.move_ip(5, 0)
             # player animation
             self.surf = pygame.transform.flip(pygame.image.load("move1.jpeg").convert(), True, False)
-        if pressed_keys[K_UP]:
+        if pressed_keys[self.up]:
             # add double jump - which can only jump twice
             DOUBLEJUMP = 0
             if self.grounded:
@@ -75,8 +86,6 @@ class Player(pygame.sprite.Sprite):
         if self.rect.top >= SCREEN_HEIGHT:
             self.rect.top = SCREEN_HEIGHT
 
-
-    
 
 
 #Terrain code from map.py
@@ -187,3 +196,4 @@ terrain.add(testTerrain3)
 #     pygame.display.flip()
 
 #     clock.tick(FRAME_RATE)
+
