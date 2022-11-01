@@ -57,7 +57,7 @@ surfaceFour = Terrain(200, 300, 1000, 600)
 surfaceFive = Terrain(100, 25, 0, 475)
 surfaceSix = Terrain(100, 25, 150, 375)
 surfaceSeven = Terrain(100, 175, 475, 425)
-surfaceToCreate = Terrain(100, 25, 9999999, 99999999999)
+surfaceToCreate = Terrain(100, 25, 1200, 900)
 surfaceToCreate.surf.fill((255, 255, 255))
 
 
