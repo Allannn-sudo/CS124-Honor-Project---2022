@@ -2,8 +2,8 @@ import pygame
 import map
 import movement
 import importlib
-importlib.reload(movement)
-importlib.reload(map)
+#importlib.reload(movement)
+#importlib.reload(map)
 from cgi import test
 from turtle import Screen
 from math import sqrt as root
@@ -205,12 +205,12 @@ while running:
 
     #If the game is processing
     if newGame == 0:
-        player.update(pressed_keys)
-        player.updateYPos()
         #Place block
         if restartButton.clicked == False:
             surfaceToCreate.update2()
         for player in players:
+            player.update(pressed_keys)
+            player.updateYPos()
             #When one of the players reaches the end
             if player.rect.right == SCREEN_WIDTH:
                 #score plus one
