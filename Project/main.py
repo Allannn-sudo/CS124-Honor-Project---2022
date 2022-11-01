@@ -48,21 +48,6 @@ surfaceSeven = map.Terrain(100, 175, 475, 425)
 surfaceToCreate = map.Terrain(100, 25, 1200, 900)
 surfaceToCreate.surf.fill((255, 255, 255))
 
-#Restart button(Don't need it anymore with new Button class)
-#RestartButton = map.Terrain(150, 150, 525, 325)
-#RestartButton.rect.center = (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
-#RestartButton.surf.fill((255, 255, 255))
-
-#Text for restart button(Don't need it anymore with new Button class)
-#RestartButton.display_surface = pygame.display.set_mode((525, 325))
-#pygame.display.set_caption('Show Text')
-#RestartButton.font = pygame.font.Font('freesansbold.ttf', 32)
-#RestartButton.text = RestartButton.font.render('Restart', True, green, white)
-#RestartButton.textRect = RestartButton.text.get_rect(
-#    center=(
-#        SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2
-#    )    
-#)
 
 gAccel = 6
 
@@ -101,7 +86,7 @@ terrain.add(surfaceSeven)
 terrain.add(surfaceToCreate)
 
 
-newGame = 0
+newGame = True
 #Score
 #---------------
 class Score(pygame.sprite.Sprite):
@@ -144,6 +129,8 @@ class Button(pygame.sprite.Sprite):
             if pygame.mouse.get_pressed()[0] == 0 and self.clicked_Then_Released == 1:
                 self.clicked = False
                 self.clicked_Then_Released = 2
+            elif pygame.mouse.get_pressed()[0] == 0:
+                self.clicked = False
 
         
         screen.blit(self.image, (self.rect.x, self.rect.y))
@@ -204,7 +191,7 @@ while running:
     score2.display_surface.blit(score2.text, (0, 40))
 
     #If the game is processing
-    if newGame == 0:
+    if newGame == True:
         #Place block
         if restartButton.clicked == False:
             surfaceToCreate.update2()
@@ -217,10 +204,13 @@ while running:
                     if score.scoreNumber == player.playerNumber:
                         score.text = score.font.render('Player ' + str(player.playerNumber) + ': ' + str(player.score), True, green, black)
                 #Jump to restarting game
-                newGame += 1
+                newGame = False
+
+        if player1.rect.top > 800 and player2.rect.top > 800:
+            newGame = False
 
     #If it goes to restarting the game
-    if newGame == 1:
+    if newGame == False:
         #Show the restart button
         restartButton.draw()
         #If the button is clicked, restart the game
@@ -228,16 +218,14 @@ while running:
             for player in players:
                 player.rect.top = 0
                 player.rect.left = 0
-            newGame += 1
-        
-    if newGame == 2:
-        restartButton.draw()
-        for player in players:
-            if player.score == 5:
-                running = False
-        if restartButton.clicked == False:
             restartButton.clicked_Then_Released = 0
-            newGame = 0
+            newGame = True
+        
+    #if newGame == 2:
+        #restartButton.draw()
+        #if restartButton.clicked == False:
+        #restartButton.clicked_Then_Released = 0
+        #newGame = 0
 
 
     for obj in terrain:
