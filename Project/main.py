@@ -48,7 +48,7 @@ surfaceFive = map.Terrain(100, 25, 0, 475)
 surfaceSix = map.Terrain(100, 25, 150, 375)
 surfaceSeven = map.Terrain(100, 175, 475, 425)
 #Obstacles
-surfaceToCreate = map.Terrain(100, 25, 999999999999999, 99999999999999999)
+surfaceToCreate = map.Terrain(100, 25, 1200, 900)
 surfaceToCreate.surf.fill((255, 255, 255))
 #Restart button
 RestartButton = map.Terrain(150, 150, 525, 325)
