@@ -152,7 +152,7 @@ restartButton = Button(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, restart_image, 1)
 
 
 clock = pygame.time.Clock()
-FRAME_RATE = 60
+FRAME_RATE = 45
 
 running = True
 while running:
@@ -230,7 +230,7 @@ while running:
     #If it goes to restarting the game
     if newGame == 1:
         #Show the restart button
-        restartButton.draw()
+        restartButton.draw() 
         #If the button is clicked, restart the game
         if restartButton.clicked_Then_Released == 2:
             for player in players:
