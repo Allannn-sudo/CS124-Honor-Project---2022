@@ -26,16 +26,24 @@ from pygame.locals import (
 
 pygame.init()
 
+
+#Screen setup
+#-----------------------------
 SCREEN_WIDTH = 1275
 SCREEN_HEIGHT = 800
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+movement.SCREEN_HEIGHT = SCREEN_HEIGHT
+movement.SCREEN_WIDTH = SCREEN_WIDTH
+screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 screen.fill((0, 0, 0))
+#-----------------------------
+
 
 white = (255, 255, 255)
 green = (0, 255, 0)
 blue = (0, 0, 128)
 black = (0, 0, 0)
 green = (0, 255, 0)
+
 
 # Move the block up and down at a constant speed
 surfaceOne = map.Terrain(200, 300, 0, 600)
@@ -85,6 +93,7 @@ players = pygame.sprite.Group()
 players.add(player1)
 players.add(player2)
 
+
 gravity_obj = pygame.sprite.Group()
 gravity_obj.add(player1)
 gravity_obj.add(player2)
@@ -99,6 +108,31 @@ terrain.add(surfaceFive)
 terrain.add(surfaceSix)
 terrain.add(surfaceSeven)
 terrain.add(surfaceToCreate)
+#-----------------------------
+
+
+#Score
+#---------------
+class Score(pygame.sprite.Sprite):
+    def __init__(self):
+        super(Score, self).__init__()
+        self.display_surface = pygame.display.set_mode((0, 0))
+        pygame.display.set_caption('Show Text')
+        self.font = pygame.font.Font('freesansbold.ttf', 32)
+        self.score = 0
+        self.text = self.font.render('Score: ' + str(self.score), True, green, black)
+        self.textRect = self.text.get_rect()
+        self.newGame = True
+
+    #Change the score only once if the player reaches the end
+    def update(self, Player):
+        if self.newGame == True:
+            if Player.rect.right == SCREEN_WIDTH:
+                self.newGame = False
+                self.score = self.score + 1
+                self.text = self.font.render('Score: ' + str(self.score), True, green, black)
+#---------------
+score = Score()
 
 
 newGame = 0
@@ -153,6 +187,10 @@ restartButton = Button(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, restart_image, 1)
 
 clock = pygame.time.Clock()
 FRAME_RATE = 60
+
+
+#----------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------
 
 running = True
 while running:
@@ -245,6 +283,7 @@ while running:
 
     # Move surface three up and down
     surfaceThree.update()
+
 
 
     pygame.display.flip()
