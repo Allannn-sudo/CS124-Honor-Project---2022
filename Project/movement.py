@@ -20,10 +20,8 @@ from pygame.locals import (
 
 pygame.init()
 
-
 SCREEN_WIDTH = 1275
 SCREEN_HEIGHT = 800
-
 
 
 
@@ -111,89 +109,3 @@ class Terrain(pygame.sprite.Sprite):
             self.moving_up = True
         if self.rect.top == 200:
             self.moving_up = False
-
-#Initialize Variables?-------
-screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
-
-gAccel = 6
-
-player = Player()
-
-#temporary
-testTerrain = Terrain(175, 175, 0, 500)
-testTerrain2 = Terrain(100, 250, 350, 400)
-testTerrain3 = Terrain(100, 250, 550, 300)
-
-    #Sprite Groups
-all_sprites = pygame.sprite.Group()
-gravity_obj = pygame.sprite.Group()
-terrain = pygame.sprite.Group()
-#add terrain to terrain group when generating terrain using a method?
-
-
-    #Add to groups
-all_sprites.add(player)
-all_sprites.add(testTerrain)
-all_sprites.add(testTerrain2)
-all_sprites.add(testTerrain3)
-
-gravity_obj.add(player)
-
-#temporary
-terrain.add(testTerrain)
-terrain.add(testTerrain2)
-terrain.add(testTerrain3)
-
-
-# clock = pygame.time.Clock()
-# FRAME_RATE = 60
-
-# running = True
-# #Game Loop-------------------
-# while running:
-#     for event in pygame.event.get():
-#         if event.type == KEYDOWN:
-#             if event.key == K_ESCAPE:
-#                 running = False
-#         elif event.type == QUIT:
-#             running = False
-
-    
-#     #GRAVITY
-#     for entity in gravity_obj:
-#         if pygame.sprite.spritecollideany(entity, terrain):
-#             obj = pygame.sprite.spritecollideany(entity, terrain).rect
-#             if entity.grounded == False:
-#                 #Check if player is less than 50 units into the ground from the top (should be only when player lands on top of terrain)
-#                 if entity.rect.right > obj.left and entity.rect.left < obj.right and entity.rect.bottom < obj.top + 50:
-#                     entity.grounded = True
-#                     entity.airTime = 0
-#                     entity.yVelocity = 0
-#                     entity.rect.y = obj.top + 1 - entity.rect.h
-#                 #Check if player is more than 50 units into the ground from the top (should be only when player is not on terrain/on the side of the terrain)
-#                 else:
-#                     #Check which side of terrain player is colliding with
-#                     #Right
-#                     if entity.rect.left < obj.right and entity.rect.left > obj.right - 10:
-#                         entity.rect.left = obj.right
-#                     #Left
-#                     if entity.rect.right > obj.left and entity.rect.right < obj.left + 10:
-#                         entity.rect.right = obj.left
-#             elif entity.grounded == True:
-#                 entity.airTime = 0
-#         else:
-#             entity.grounded = False
-#             entity.yVelocity = entity.yVelocity + gAccel * entity.airTime
-#             entity.airTime += 1/FRAME_RATE
-
-#     screen.fill((0, 0, 0))
-    
-#     for entity in all_sprites:
-#         screen.blit(entity.surf,entity.rect)
-#     pressed_keys = pygame.key.get_pressed()
-#     player.update(pressed_keys)
-#     player.updateYPos()
-#     pygame.display.flip()
-
-#     clock.tick(FRAME_RATE)
-
