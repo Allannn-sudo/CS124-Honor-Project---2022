@@ -84,25 +84,25 @@ clock = pygame.time.Clock()
 FRAME_RATE = 60
 
 
-running = True
-while running:
-    for event in pygame.event.get():
-        if event.type == KEYDOWN:
-            if event.key == K_ESCAPE:
-                running = False
-        elif event.type == QUIT:
-            running = False
+# running = True
+# while running:
+#     for event in pygame.event.get():
+#         if event.type == KEYDOWN:
+#             if event.key == K_ESCAPE:
+#                 running = False
+#         elif event.type == QUIT:
+#             running = False
 
-    screen.fill((0,0,0))
+#     screen.fill((0,0,0))
 
-    for obj in terrain:
-        screen.blit(obj.surf,obj.rect)
+#     for obj in terrain:
+#         screen.blit(obj.surf,obj.rect)
     
-    #Move surface three up and down
-    surfaceThree.update()
-    #Place the surface by mouse click
-    surfaceToCreate.update2()
+#     #Move surface three up and down
+#     surfaceThree.update()
+#     #Place the surface by mouse click
+#     surfaceToCreate.update2()
 
-    pygame.display.flip()
+#     pygame.display.flip()
 
-    clock.tick(FRAME_RATE)
+#     clock.tick(FRAME_RATE)

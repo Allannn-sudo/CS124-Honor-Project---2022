@@ -1,4 +1,5 @@
 from cgi import test
+from tkinter import XView
 from turtle import Screen
 from math import sqrt as root
 import pygame
@@ -31,15 +32,20 @@ class Player(pygame.sprite.Sprite):
         super(Player, self).__init__()
         self.surf = pygame.Surface((75,150))
         self.surf.fill((255,255,255))
-        self.surf = pygame.image.load("basic.jpeg").convert()
+        # self.surf = pygame.image.load("basic.jpeg").convert()
         # self.surf.set_colorkey((255,255,255), RLEACCEL)
         self.rect = self.surf.get_rect()
         self.grounded = False
         self.airTime = 0
         self.yVelocity = 0
+        self.xVelocity = 0
         self.up = upbutton
         self.left = leftbutton
         self.right = rightbutton
+        self.width = 75
+        # self.width = self.image.get_width()
+        self.height = 150
+        # self.height = self.image.height()
         self.score = 0
         self.playerNumber = playerNumber
     def updateYPos(self):
@@ -47,19 +53,21 @@ class Player(pygame.sprite.Sprite):
     # Move the sprite based on user keypresses
     def update(self, pressed_keys):
         if pressed_keys[self.left]:
-            if pressed_keys[K_LSHIFT or K_RSHIFT]: # add shift for speeding up
-                self.rect.move_ip(-10, 0)
-            else : 
-                self.rect.move_ip(-5, 0)
-            # player animation
-            self.surf = pygame.image.load("move1.jpeg").convert()
-        if pressed_keys[self.right]:
-            if pressed_keys[K_LSHIFT or K_RSHIFT]: # add shift for speeding up
-                self.rect.move_ip(10, 0)
-            else : 
-                self.rect.move_ip(5, 0)
-            # player animation
-            self.surf = pygame.transform.flip(pygame.image.load("move1.jpeg").convert(), True, False)
+            if pressed_keys[K_LSHIFT or K_RSHIFT]:
+                self.xVelocity = -10
+            else:
+                self.xVelocity = -5
+            # self.surf = pygame.image.load("move1.jpeg").convert()
+        elif pressed_keys[self.right]:
+            if pressed_keys[K_LSHIFT or K_RSHIFT]:
+                self.xVelocity = 10
+            else:
+                self.xVelocity = 5
+            # self.surf = pygame.transform.flip(pygame.image.load("move1.jpeg").convert(), True, False)
+        else:
+            self.xVelocity = 0
+        self.rect.move_ip(self.xVelocity, 0)
+
         if pressed_keys[self.up]:
             # add double jump - which can only jump twice
             DOUBLEJUMP = 0

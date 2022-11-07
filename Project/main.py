@@ -67,7 +67,7 @@ surfaceToCreate.surf.fill((255, 255, 255))
 gAccel = 6
 
 player1 = movement.Player(K_UP, K_LEFT, K_RIGHT, 1)
-player2 = movement.Player(K_w, K_a, K_d, 2)
+# player2 = movement.Player(K_w, K_a, K_d, 2)
 
 all_sprites = pygame.sprite.Group()
 all_sprites.add(surfaceOne)
@@ -79,15 +79,15 @@ all_sprites.add(surfaceSix)
 all_sprites.add(surfaceSeven)
 all_sprites.add(surfaceToCreate)
 all_sprites.add(player1)
-all_sprites.add(player2)
+# all_sprites.add(player2)
 
 players = pygame.sprite.Group()
 players.add(player1)
-players.add(player2)
+# players.add(player2)
 
 gravity_obj = pygame.sprite.Group()
 gravity_obj.add(player1)
-gravity_obj.add(player2)
+# gravity_obj.add(player2)
 
 # Add blocks to sprite group
 terrain = pygame.sprite.Group()
@@ -115,10 +115,10 @@ class Score(pygame.sprite.Sprite):
         self.scoreNumber = Player.playerNumber
 #---------------
 score1 = Score(player1)
-score2 = Score(player2)
+# score2 = Score(player2)
 scores = pygame.sprite.Group()
 scores.add(score1)
-scores.add(score2)
+# scores.add(score2)
 
 
 restart_image = pygame.image.load('restartbutton.jpeg').convert_alpha()
@@ -163,31 +163,69 @@ while running:
         elif event.type == QUIT:
             running = False
 
+    # for entity in gravity_obj:
+    #     if pygame.sprite.spritecollideany(entity, terrain):
+    #         obj = pygame.sprite.spritecollideany(entity, terrain).rect
+    #         if entity.grounded == False:
+    #             # Check if player is less than 50 units into the ground from the top (should be only when player lands on top of terrain)
+    #             if entity.rect.right > obj.left and entity.rect.left < obj.right and entity.rect.bottom < obj.top + 50:
+    #                 entity.grounded = True
+    #                 entity.airTime = 0
+    #                 entity.yVelocity = 0
+    #                 entity.rect.y = obj.top + 1 - entity.rect.h
+    #             # Check if player is more than 50 units into the ground from the top (should be only when player is not on terrain/on the side of the terrain)
+    #             else:
+    #                 # Check which side of terrain player is colliding with
+    #                 # Right
+    #                 if entity.rect.left < obj.right and entity.rect.left > obj.right - 10:
+    #                     entity.rect.left = obj.right
+    #                 # Left
+    #                 if entity.rect.right > obj.left and entity.rect.right < obj.left + 10:
+    #                     entity.rect.right = obj.left
+    #         elif entity.grounded == True:
+    #             entity.airTime = 0
+    #     else:
+    #         entity.grounded = False
+    #         entity.yVelocity = entity.yVelocity + gAccel * entity.airTime
+    #         entity.airTime += 1 / FRAME_RATE
+
     for entity in gravity_obj:
-        if pygame.sprite.spritecollideany(entity, terrain):
-            obj = pygame.sprite.spritecollideany(entity, terrain).rect
-            if entity.grounded == False:
-                # Check if player is less than 50 units into the ground from the top (should be only when player lands on top of terrain)
-                if entity.rect.right > obj.left and entity.rect.left < obj.right and entity.rect.bottom < obj.top + 50:
-                    entity.grounded = True
-                    entity.airTime = 0
-                    entity.yVelocity = 0
-                    entity.rect.y = obj.top + 1 - entity.rect.h
-                # Check if player is more than 50 units into the ground from the top (should be only when player is not on terrain/on the side of the terrain)
+        # dy = entity.yVelocity
+        for obj in terrain:
+            setPosx = entity.xVelocity
+            if obj.rect.colliderect(entity.rect.x + entity.xVelocity, entity.rect.y, entity.width, entity.height):
+                if entity.xVelocity < 0:
+                    entity.rect.left = obj.rect.right
+                    entity.xVelocity = 0
+                    print("left")
+                elif entity.xVelocity > 0:
+                    entity.rect.right = obj.rect.left
+                    entity.xVelocity = 0
+                    print("right")
                 else:
-                    # Check which side of terrain player is colliding with
-                    # Right
-                    if entity.rect.left < obj.right and entity.rect.left > obj.right - 10:
-                        entity.rect.left = obj.right
-                    # Left
-                    if entity.rect.right > obj.left and entity.rect.right < obj.left + 10:
-                        entity.rect.right = obj.left
-            elif entity.grounded == True:
+                    entity.rect.centerx = obj.rect.centerx
+                    entity.rect.bottom = obj.rect.top
+            if obj.rect.colliderect(entity.rect.x, entity.rect.y + entity.yVelocity, entity.width, entity.height):
+                if entity.yVelocity < 0:
+                    entity.rect.top = obj.rect.bottom
+                    entity.yVelocity = 0
+                    print("under")
+                elif entity.yVelocity > 0:
+                    entity.rect.bottom = obj.rect.top
+                    entity.yVelocity = 0
+                    entity.grounded = True
+                    print("on top")
                 entity.airTime = 0
-        else:
-            entity.grounded = False
-            entity.yVelocity = entity.yVelocity + gAccel * entity.airTime
-            entity.airTime += 1 / FRAME_RATE
+        entity.rect.move_ip(0, entity.yVelocity)
+        entity.yVelocity += gAccel * entity.airTime
+        # dy = entity.yVelocity
+        entity.airTime += 1 / FRAME_RATE
+        
+            
+
+            
+
+
 
     screen.fill((0, 0, 0))
 
@@ -197,11 +235,11 @@ while running:
 
     for player in players:
         player.update(pressed_keys)
-        player.updateYPos()
+        # player.updateYPos()
     
     #Display score text and increase the score
     score1.display_surface.blit(score1.text, score1.textRect)
-    score2.display_surface.blit(score2.text, (0, 40))
+    # score2.display_surface.blit(score2.text, (0, 40))
 
     #If the game is processing
     if newGame == 0:
