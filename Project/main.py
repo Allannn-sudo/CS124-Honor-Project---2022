@@ -220,7 +220,26 @@ while running:
         entity.yVelocity += gAccel * entity.airTime
         # dy = entity.yVelocity
         entity.airTime += 1 / FRAME_RATE
-        
+    
+    ## check for collision with moving platform
+    ## we need to put platform in its own sprite group
+    ## we also need to differentiate dx and dy (change in movement in the x and y direction) from their velocities
+    # for platform in platform_group:
+        ## collision in the x direction
+        # if platform.rect.colliderect(entity.rect.x + entity.xVelocity, entity.rect.y, entity.width, entity.height):
+            # entity.xVelocity = 0
+        ## collision in the y direction
+        # if platform.rect.colliderect(entity.rect.x, entity.rect.y + entity.yVelocity, entity.width, entity.height):
+            ## check if below platform
+            # if abs((entity.rect.top + entity.yVelocity) - platform.rect.bottom) < 20:
+                # entity.yVelocity = platform.rect.bottom - entity.rect.top
+            ## check if above platform
+            # elif abs((entity.rect.bottom + entity.yVelocity) - platform.rect.top) < 20:
+                # entity.rect.bottom = platform.rect.top - 1
+                # entity.grounded = True
+                # entity.yVelocity = 0
+            ## if we have sideways platforms, add another if statement for that
+
             
 
             
