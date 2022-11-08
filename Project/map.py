@@ -15,8 +15,7 @@ SCREEN_WIDTH = 1200
 SCREEN_HEIGHT = 900
 screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 screen.fill((0, 0, 0))
-
-
+        
 
 class Terrain(pygame.sprite.Sprite):
     def __init__(self, suface_Width, suface_Height, pos_Width, pos_Height):
