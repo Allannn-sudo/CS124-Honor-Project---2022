@@ -52,7 +52,7 @@ class Terrain(pygame.sprite.Sprite):
                 )
             )
             mousex, mousey = pygame.mouse.get_pos()
-            surfaceEight = Terrain(100, 20, mousex, mousey)
+            surfaceEight = Terrain(100, 20, mousex-50, mousey-9)
             terrain.add(surfaceEight)
 
         #screen.blit(self.surf, self.rect)
