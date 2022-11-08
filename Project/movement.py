@@ -32,12 +32,13 @@ class Background(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.left, self.rect.top = location
 
+
 #Player class---------------------
 class Player(pygame.sprite.Sprite):
     def __init__(self, upbutton, leftbutton, rightbutton, playerNumber):
         super(Player, self).__init__()
         self.playerNumber = playerNumber
-        self.surf = pygame.Surface((75,150))
+        self.surf = pygame.Surface((60,80))
         self.surf.fill((255,255,255))
         if self.playerNumber == 1:
             self.surf = pygame.image.load("basic.jpeg").convert()
