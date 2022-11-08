@@ -84,7 +84,7 @@ clock = pygame.time.Clock()
 FRAME_RATE = 60
 
 
-running = True
+running = False
 while running:
     for event in pygame.event.get():
         if event.type == KEYDOWN:

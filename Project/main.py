@@ -69,6 +69,8 @@ gAccel = 6
 player1 = movement.Player(K_UP, K_LEFT, K_RIGHT, 1)
 player2 = movement.Player(K_w, K_a, K_d, 2)
 
+BackGround = movement.Background('backGround.png', [0,0])
+
 all_sprites = pygame.sprite.Group()
 all_sprites.add(surfaceOne)
 all_sprites.add(surfaceTwo)
@@ -189,7 +191,12 @@ while running:
             entity.yVelocity = entity.yVelocity + gAccel * entity.airTime
             entity.airTime += 1 / FRAME_RATE
 
-    screen.fill((0, 0, 0))
+    # use the first background
+
+
+    screen.fill([0, 0, 0])
+    screen.blit(BackGround.image, BackGround.rect)
+    
 
     for entity in all_sprites:
         screen.blit(entity.surf, entity.rect)
