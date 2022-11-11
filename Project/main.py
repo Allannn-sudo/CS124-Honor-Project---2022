@@ -152,7 +152,7 @@ restartButton = Button(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, restart_image, 1)
 
 
 clock = pygame.time.Clock()
-FRAME_RATE = 45
+FRAME_RATE = 60
 
 running = True
 while running:
@@ -194,10 +194,6 @@ while running:
     for entity in all_sprites:
         screen.blit(entity.surf, entity.rect)
     pressed_keys = pygame.key.get_pressed()
-
-    for player in players:
-        player.update(pressed_keys)
-        player.updateYPos()
     
     #Display score text and increase the score
     score1.display_surface.blit(score1.text, score1.textRect)
@@ -209,8 +205,9 @@ while running:
         if restartButton.clicked == False:
             surfaceToCreate.update2()
         for player in players:
-            player.update(pressed_keys)
-            player.updateYPos()
+            if player.rect.top < 800:
+                player.update(pressed_keys)
+                player.updateYPos()
             #When one of the players reaches the end
             if player.rect.right == SCREEN_WIDTH:
                 #score plus one
