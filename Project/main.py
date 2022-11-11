@@ -46,23 +46,8 @@ surfaceFive = map.Terrain(100, 25, 0, 475)
 surfaceSix = map.Terrain(100, 25, 150, 375)
 surfaceSeven = map.Terrain(100, 175, 475, 425)
 surfaceToCreate = map.Terrain(100, 25, 1200, 900)
-surfaceToCreate.surf.fill((255, 255, 255))
+surfaceToCreate.surf.fill(white)
 
-#Restart button(Don't need it anymore with new Button class)
-#RestartButton = map.Terrain(150, 150, 525, 325)
-#RestartButton.rect.center = (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
-#RestartButton.surf.fill((255, 255, 255))
-
-#Text for restart button(Don't need it anymore with new Button class)
-#RestartButton.display_surface = pygame.display.set_mode((525, 325))
-#pygame.display.set_caption('Show Text')
-#RestartButton.font = pygame.font.Font('freesansbold.ttf', 32)
-#RestartButton.text = RestartButton.font.render('Restart', True, green, white)
-#RestartButton.textRect = RestartButton.text.get_rect(
-#    center=(
-#        SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2
-#    )    
-#)
 
 gAccel = 6
 
@@ -78,8 +63,8 @@ all_sprites.add(surfaceFive)
 all_sprites.add(surfaceSix)
 all_sprites.add(surfaceSeven)
 all_sprites.add(surfaceToCreate)
-all_sprites.add(player1)
-all_sprites.add(player2)
+#all_sprites.add(player1)
+#all_sprites.add(player2)
 
 players = pygame.sprite.Group()
 players.add(player1)
@@ -208,6 +193,7 @@ while running:
             if player.rect.top < 800:
                 player.update(pressed_keys)
                 player.updateYPos()
+                screen.blit(player.surf, player.rect)
             #When one of the players reaches the end
             if player.rect.right == SCREEN_WIDTH:
                 #score plus one
@@ -231,10 +217,10 @@ while running:
         #If the button is clicked, restart the game
         if restartButton.clicked_Then_Released == 2:
             for player in players:
-                player.airTime = 0
-                player.yVelocity = 0
                 player.rect.top = 0
                 player.rect.left = 0
+                player.airTime = 0
+                player.yVelocity = 0
             restartButton.clicked_Then_Released = 0
             newGame = 0
         
