@@ -223,7 +223,6 @@ while running:
         for player in players:
             if player.rect.top < 800:
                 player.update(pressed_keys)
-                screen.blit(player.surf, player.rect)
             #When one of the players reaches the end
             if player.rect.right == SCREEN_WIDTH:
                 #score plus one
