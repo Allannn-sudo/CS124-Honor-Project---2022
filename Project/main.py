@@ -207,7 +207,7 @@ while running:
     if newGame == 0:
         #Place block
         if restartButton.clicked == False:
-            surfaceToCreate.update3()
+            surfaceToCreate.addBlock(terrain)
         for player in players:
             #When one of the players reaches the end
             if player.rect.right == SCREEN_WIDTH:
