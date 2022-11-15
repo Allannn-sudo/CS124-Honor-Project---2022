@@ -230,18 +230,19 @@ while running:
         for platform in platform_group:
             # collision in the x direction
             if platform.rect.colliderect(entity.rect.x + entity.xVelocity, entity.rect.y, entity.width, entity.height):
-                entity.xVelocity = 0
+                entity.grounded = True
             # collision in the y direction
             if platform.rect.colliderect(entity.rect.x, entity.rect.y + entity.yVelocity, entity.width, entity.height):
                 # check if below platform
                 if abs((entity.rect.top + entity.yVelocity) - platform.rect.bottom) < 50:
                     #entity.yVelocity = platform.rect.bottom - entity.rect.top
-                    entity.yVelocity = 0
+                    entity.grounded = True
                 # check if above platform
                 elif abs((entity.rect.bottom + entity.yVelocity) - platform.rect.top) < 50:
                     entity.rect.bottom = platform.rect.top - 1
                     entity.grounded = True
-                    entity.yVelocity = 0
+                    entity.yVelocity = 4
+                    entity.airTime = 0
                 # if we have sideways platforms, add another if statement for that
 
             
@@ -308,6 +309,7 @@ while running:
         screen.blit(obj.surf, obj.rect)
 
     # Move surface three up and down
+    
     surfaceThree.update()
 
 
