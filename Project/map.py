@@ -42,7 +42,7 @@ class Terrain(pygame.sprite.Sprite):
             self.moving_up = False
 
     #Place block with mouse click
-    def update2(self):
+    def addBlock(self, terrainGroup):
         mouse_pos = pygame.mouse.get_pos()
         mouse_buttons = pygame.mouse.get_pressed()
         if any(mouse_buttons):
@@ -51,7 +51,11 @@ class Terrain(pygame.sprite.Sprite):
                     mouse_pos
                 )
             )
-        screen.blit(self.surf, self.rect)
+            mousex, mousey = pygame.mouse.get_pos()
+            surfaceEight = Terrain(100, 20, mousex-50, mousey-9)
+            terrainGroup.add(surfaceEight)
+
+        #screen.blit(self.surf, self.rect)
 
         
 
@@ -82,3 +86,27 @@ terrain.add(surfaceToCreate)
 #Added clock frame
 clock = pygame.time.Clock()
 FRAME_RATE = 60
+
+
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == KEYDOWN:
+            if event.key == K_ESCAPE:
+                running = False
+        elif event.type == QUIT:
+            running = False
+
+    screen.fill((0,0,0))
+
+    for obj in terrain:
+        screen.blit(obj.surf,obj.rect)
+    
+    #Move surface three up and down
+    surfaceThree.update()
+    #Place the surface by mouse click
+    surfaceToCreate.addBlock(terrain)
+
+    pygame.display.flip()
+
+    clock.tick(FRAME_RATE)

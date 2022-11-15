@@ -133,7 +133,7 @@ restartButton = Button(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, restart_image, 1)
 
 
 clock = pygame.time.Clock()
-FRAME_RATE = 60
+FRAME_RATE = 120
 
 running = True
 while running:
@@ -184,8 +184,7 @@ while running:
     if newGame == 0:
         #Place block
         if restartButton.clicked == False:
-            surfaceToCreate.update2()
-        #unblit the player once it falls off the map
+            surfaceToCreate.addBlock(terrain)
         for player in players:
             if player.rect.top < 800:
                 player.update(pressed_keys)
