@@ -211,10 +211,6 @@ while running:
         screen.blit(entity.surf, entity.rect)
     pressed_keys = pygame.key.get_pressed()
     
-    for player in players:
-        player.update(pressed_keys)
-        # player.updateYPos()
-    
     #Display score text and increase the score
     score1.display_surface.blit(score1.text, score1.textRect)
     score2.display_surface.blit(score2.text, (0, 40))
@@ -227,7 +223,6 @@ while running:
         for player in players:
             if player.rect.top < 800:
                 player.update(pressed_keys)
-                player.updateYPos()
                 screen.blit(player.surf, player.rect)
             #When one of the players reaches the end
             if player.rect.right == SCREEN_WIDTH:
