@@ -45,24 +45,9 @@ surfaceFour = map.Terrain(300, 300, 1000, 600)
 surfaceFive = map.Terrain(100, 25, 0, 475)
 surfaceSix = map.Terrain(100, 25, 150, 375)
 surfaceSeven = map.Terrain(100, 175, 475, 425)
-surfaceToCreate = map.Terrain(100, 25, 1200, 900)
-surfaceToCreate.surf.fill((255, 255, 255))
+surfaceToCreate = map.Terrain(100, 25, 1200, 800)
+surfaceToCreate.surf.fill(white)
 
-#Restart button(Don't need it anymore with new Button class)
-#RestartButton = map.Terrain(150, 150, 525, 325)
-#RestartButton.rect.center = (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
-#RestartButton.surf.fill((255, 255, 255))
-
-#Text for restart button(Don't need it anymore with new Button class)
-#RestartButton.display_surface = pygame.display.set_mode((525, 325))
-#pygame.display.set_caption('Show Text')
-#RestartButton.font = pygame.font.Font('freesansbold.ttf', 32)
-#RestartButton.text = RestartButton.font.render('Restart', True, green, white)
-#RestartButton.textRect = RestartButton.text.get_rect(
-#    center=(
-#        SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2
-#    )    
-#)
 
 gAccel = 6
 
@@ -77,9 +62,6 @@ all_sprites.add(surfaceFour)
 all_sprites.add(surfaceFive)
 all_sprites.add(surfaceSix)
 all_sprites.add(surfaceSeven)
-all_sprites.add(surfaceToCreate)
-all_sprites.add(player1)
-all_sprites.add(player2)
 
 players = pygame.sprite.Group()
 players.add(player1)
@@ -98,7 +80,6 @@ terrain.add(surfaceFour)
 terrain.add(surfaceFive)
 terrain.add(surfaceSix)
 terrain.add(surfaceSeven)
-terrain.add(surfaceToCreate)
 
 
 newGame = 0
@@ -194,10 +175,6 @@ while running:
     for entity in all_sprites:
         screen.blit(entity.surf, entity.rect)
     pressed_keys = pygame.key.get_pressed()
-
-    for player in players:
-        player.update(pressed_keys)
-        player.updateYPos()
     
     #Display score text and increase the score
     score1.display_surface.blit(score1.text, score1.textRect)
@@ -209,35 +186,41 @@ while running:
         if restartButton.clicked == False:
             surfaceToCreate.addBlock(terrain)
         for player in players:
+            if player.rect.top < 800:
+                player.update(pressed_keys)
+                player.updateYPos()
+                screen.blit(player.surf, player.rect)
             #When one of the players reaches the end
             if player.rect.right == SCREEN_WIDTH:
                 #score plus one
                 player.score = player.score + 1
+                #update the score text of the player who reaches the end
                 for score in scores:
                     if score.scoreNumber == player.playerNumber:
                         score.text = score.font.render('Player ' + str(player.playerNumber) + ': ' + str(player.score), True, green, black)
                 #Jump to restarting game
-                newGame += 1
+                newGame = 1
+
+        #if all players fall off the map
+        #restart the game
+        if player1.rect.top >= 800 and player2.rect.top >= 800:
+            newGame = 1
 
     #If it goes to restarting the game
     if newGame == 1:
         #Show the restart button
-        restartButton.draw()
+        restartButton.draw() 
         #If the button is clicked, restart the game
         if restartButton.clicked_Then_Released == 2:
             for player in players:
                 player.rect.top = 0
                 player.rect.left = 0
-            newGame += 1
-        
-    if newGame == 2:
-        restartButton.draw()
-        for player in players:
-            if player.score == 5:
-                running = False
-        if restartButton.clicked == False:
+                player.airTime = 0
+                player.yVelocity = 0
             restartButton.clicked_Then_Released = 0
             newGame = 0
+        
+
 
 
     for obj in terrain:
