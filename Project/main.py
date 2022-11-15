@@ -40,6 +40,7 @@ green = (0, 255, 0)
 # Move the block up and down at a constant speed
 surfaceOne = map.Terrain(200, 300, 0, 600)
 surfaceTwo = map.Terrain(225, 350, 350, 500)
+# surfaceThree is a moving platform
 surfaceThree = map.Platform(175, 50, 700, 500)
 surfaceFour = map.Terrain(300, 300, 1000, 600)
 surfaceFive = map.Terrain(100, 25, 0, 475)
@@ -77,13 +78,14 @@ gravity_obj.add(player1)
 terrain = pygame.sprite.Group()
 terrain.add(surfaceOne)
 terrain.add(surfaceTwo)
-#terrain.add(surfaceThree)
+# surfaceThree is a Platform, not a Terrain
 terrain.add(surfaceFour)
 terrain.add(surfaceFive)
 terrain.add(surfaceSix)
 terrain.add(surfaceSeven)
 terrain.add(surfaceToCreate)
 
+# Add surfaceThree to platform group
 platform_group = pygame.sprite.Group()
 platform_group.add(surfaceThree)
 
@@ -157,11 +159,9 @@ while running:
                 if entity.xVelocity < 0:
                     entity.rect.left = obj.rect.right
                     entity.xVelocity = 0
-                    print("left")
                 elif entity.xVelocity > 0:
                     entity.rect.right = obj.rect.left
                     entity.xVelocity = 0
-                    print("right")
                 else:
                     entity.rect.centerx = obj.rect.centerx
                     entity.rect.bottom = obj.rect.top
@@ -169,12 +169,10 @@ while running:
                 if entity.yVelocity < 0:
                     entity.rect.top = obj.rect.bottom
                     entity.yVelocity = 0
-                    print("under")
                 elif entity.yVelocity > 0:
                     entity.rect.bottom = obj.rect.top
                     entity.yVelocity = 0
                     entity.grounded = True
-                    print("on top")
                 entity.airTime = 0
         entity.rect.move_ip(0, entity.yVelocity)
         entity.yVelocity += gAccel * entity.airTime
@@ -193,7 +191,7 @@ while running:
             if platform.rect.colliderect(entity.rect.x, entity.rect.y + entity.yVelocity, entity.width, entity.height):
                 # check if below platform
                 if abs((entity.rect.top + entity.yVelocity) - platform.rect.bottom) < 50:
-                    #entity.yVelocity = platform.rect.bottom - entity.rect.top
+                    # (?) entity.yVelocity = platform.rect.bottom - entity.rect.top
                     entity.grounded = True
                 # check if above platform
                 elif abs((entity.rect.bottom + entity.yVelocity) - platform.rect.top) < 50:
