@@ -185,6 +185,7 @@ while running:
         #Place block
         if restartButton.clicked == False:
             surfaceToCreate.update2()
+        #unblit the player once it falls off the map
         for player in players:
             if player.rect.top < 800:
                 player.update(pressed_keys)
@@ -194,16 +195,16 @@ while running:
             if player.rect.right == SCREEN_WIDTH:
                 #score plus one
                 player.score = player.score + 1
+                #update the score text of the player who reaches the end
                 for score in scores:
                     if score.scoreNumber == player.playerNumber:
                         score.text = score.font.render('Player ' + str(player.playerNumber) + ': ' + str(player.score), True, green, black)
                 #Jump to restarting game
                 newGame = 1
 
-            if player.rect.top >= 800:
-                player.rect.top = 800
-        
-        if player1.rect.top == 800 and player2.rect.top == 800:
+        #if all players fall off the map
+        #restart the game
+        if player1.rect.top >= 800 and player2.rect.top >= 800:
             newGame = 1
 
     #If it goes to restarting the game
