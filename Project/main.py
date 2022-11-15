@@ -40,13 +40,11 @@ green = (0, 255, 0)
 # Move the block up and down at a constant speed
 surfaceOne = map.Terrain(200, 300, 0, 600)
 surfaceTwo = map.Terrain(225, 350, 350, 500)
-# surfaceThree is a moving platform
 surfaceThree = map.Platform(175, 50, 700, 500)
 surfaceFour = map.Terrain(300, 300, 1000, 600)
 surfaceFive = map.Terrain(100, 25, 0, 475)
 surfaceSix = map.Terrain(100, 25, 150, 375)
 surfaceSeven = map.Terrain(100, 175, 475, 425)
-
 surfaceToCreate = map.Terrain(100, 25, 1200, 900)
 surfaceToCreate.surf.fill((255, 255, 255))
 
@@ -63,7 +61,6 @@ all_sprites.add(surfaceFour)
 all_sprites.add(surfaceFive)
 all_sprites.add(surfaceSix)
 all_sprites.add(surfaceSeven)
-
 all_sprites.add(surfaceToCreate)
 all_sprites.add(player1)
 # all_sprites.add(player2)
@@ -80,13 +77,13 @@ gravity_obj.add(player1)
 terrain = pygame.sprite.Group()
 terrain.add(surfaceOne)
 terrain.add(surfaceTwo)
-# surfaceThree is a Platform, not a Terrain
+#terrain.add(surfaceThree)
 terrain.add(surfaceFour)
 terrain.add(surfaceFive)
 terrain.add(surfaceSix)
 terrain.add(surfaceSeven)
+terrain.add(surfaceToCreate)
 
-# Add surfaceThree to platform group
 platform_group = pygame.sprite.Group()
 platform_group.add(surfaceThree)
 
@@ -141,7 +138,7 @@ restartButton = Button(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, restart_image, 1)
 
 
 clock = pygame.time.Clock()
-FRAME_RATE = 120
+FRAME_RATE = 60
 
 running = True
 while running:
@@ -160,9 +157,11 @@ while running:
                 if entity.xVelocity < 0:
                     entity.rect.left = obj.rect.right
                     entity.xVelocity = 0
+                    print("left")
                 elif entity.xVelocity > 0:
                     entity.rect.right = obj.rect.left
                     entity.xVelocity = 0
+                    print("right")
                 else:
                     entity.rect.centerx = obj.rect.centerx
                     entity.rect.bottom = obj.rect.top
@@ -170,10 +169,12 @@ while running:
                 if entity.yVelocity < 0:
                     entity.rect.top = obj.rect.bottom
                     entity.yVelocity = 0
+                    print("under")
                 elif entity.yVelocity > 0:
                     entity.rect.bottom = obj.rect.top
                     entity.yVelocity = 0
                     entity.grounded = True
+                    print("on top")
                 entity.airTime = 0
         entity.rect.move_ip(0, entity.yVelocity)
         entity.yVelocity += gAccel * entity.airTime
@@ -192,7 +193,7 @@ while running:
             if platform.rect.colliderect(entity.rect.x, entity.rect.y + entity.yVelocity, entity.width, entity.height):
                 # check if below platform
                 if abs((entity.rect.top + entity.yVelocity) - platform.rect.bottom) < 50:
-                    # (?) entity.yVelocity = platform.rect.bottom - entity.rect.top
+                    #entity.yVelocity = platform.rect.bottom - entity.rect.top
                     entity.grounded = True
                 # check if above platform
                 elif abs((entity.rect.bottom + entity.yVelocity) - platform.rect.top) < 50:
@@ -221,43 +222,37 @@ while running:
     if newGame == 0:
         #Place block
         if restartButton.clicked == False:
-            surfaceToCreate.addBlock(terrain)
+            surfaceToCreate.update2()
         for player in players:
-            if player.rect.top < 800:
-                player.update(pressed_keys)
-                player.updateYPos()
-                screen.blit(player.surf, player.rect)
             #When one of the players reaches the end
             if player.rect.right == SCREEN_WIDTH:
                 #score plus one
                 player.score = player.score + 1
-                #update the score text of the player who reaches the end
                 for score in scores:
                     if score.scoreNumber == player.playerNumber:
                         score.text = score.font.render('Player ' + str(player.playerNumber) + ': ' + str(player.score), True, green, black)
                 #Jump to restarting game
-                newGame = 1
-
-        #if all players fall off the map
-        #restart the game
-        if player1.rect.top >= 800 and player2.rect.top >= 800:
-            newGame = 1
+                newGame += 1
 
     #If it goes to restarting the game
     if newGame == 1:
         #Show the restart button
-        restartButton.draw() 
+        restartButton.draw()
         #If the button is clicked, restart the game
         if restartButton.clicked_Then_Released == 2:
             for player in players:
                 player.rect.top = 0
                 player.rect.left = 0
-                player.airTime = 0
-                player.yVelocity = 0
+            newGame += 1
+        
+    if newGame == 2:
+        restartButton.draw()
+        for player in players:
+            if player.score == 5:
+                running = False
+        if restartButton.clicked == False:
             restartButton.clicked_Then_Released = 0
             newGame = 0
-        
-
 
 
     for obj in terrain:
