@@ -45,8 +45,9 @@ surfaceFour = map.Terrain(300, 300, 1000, 600)
 surfaceFive = map.Terrain(100, 25, 0, 475)
 surfaceSix = map.Terrain(100, 25, 150, 375)
 surfaceSeven = map.Terrain(100, 175, 475, 425)
-surfaceToCreate = map.Terrain(100, 25, 1200, 900)
-surfaceToCreate.surf.fill((255, 255, 255))
+surfaceToCreate = map.Terrain(100, 25, 1200, 800)
+surfaceToCreate.surf.fill(white)
+
 
 gAccel = 6
 
@@ -209,50 +210,56 @@ while running:
     for entity in all_sprites:
         screen.blit(entity.surf, entity.rect)
     pressed_keys = pygame.key.get_pressed()
-
+    
     for player in players:
         player.update(pressed_keys)
         # player.updateYPos()
     
     #Display score text and increase the score
     score1.display_surface.blit(score1.text, score1.textRect)
-    # score2.display_surface.blit(score2.text, (0, 40))
+    score2.display_surface.blit(score2.text, (0, 40))
 
     #If the game is processing
     if newGame == 0:
         #Place block
         if restartButton.clicked == False:
-            surfaceToCreate.update2()
+            surfaceToCreate.addBlock(terrain)
         for player in players:
+            if player.rect.top < 800:
+                player.update(pressed_keys)
+                player.updateYPos()
+                screen.blit(player.surf, player.rect)
             #When one of the players reaches the end
             if player.rect.right == SCREEN_WIDTH:
                 #score plus one
                 player.score = player.score + 1
+                #update the score text of the player who reaches the end
                 for score in scores:
                     if score.scoreNumber == player.playerNumber:
                         score.text = score.font.render('Player ' + str(player.playerNumber) + ': ' + str(player.score), True, green, black)
                 #Jump to restarting game
-                newGame += 1
+                newGame = 1
+
+        #if all players fall off the map
+        #restart the game
+        if player1.rect.top >= 800 and player2.rect.top >= 800:
+            newGame = 1
 
     #If it goes to restarting the game
     if newGame == 1:
         #Show the restart button
-        restartButton.draw()
+        restartButton.draw() 
         #If the button is clicked, restart the game
         if restartButton.clicked_Then_Released == 2:
             for player in players:
                 player.rect.top = 0
                 player.rect.left = 0
-            newGame += 1
-        
-    if newGame == 2:
-        restartButton.draw()
-        for player in players:
-            if player.score == 5:
-                running = False
-        if restartButton.clicked == False:
+                player.airTime = 0
+                player.yVelocity = 0
             restartButton.clicked_Then_Released = 0
             newGame = 0
+        
+
 
 
     for obj in terrain:
