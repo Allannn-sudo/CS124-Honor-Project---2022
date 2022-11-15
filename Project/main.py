@@ -239,7 +239,7 @@ while running:
                     entity.grounded = True
                 # check if above platform
                 elif abs((entity.rect.bottom + entity.yVelocity) - platform.rect.top) < 50:
-                    entity.rect.bottom = platform.rect.top - 1
+                    entity.rect.bottom = platform.rect.top
                     entity.grounded = True
                     entity.yVelocity = 4
                     entity.airTime = 0
