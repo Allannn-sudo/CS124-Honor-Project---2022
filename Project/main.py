@@ -45,7 +45,7 @@ surfaceFour = map.Terrain(300, 300, 1000, 600)
 surfaceFive = map.Terrain(100, 25, 0, 475)
 surfaceSix = map.Terrain(100, 25, 150, 375)
 surfaceSeven = map.Terrain(100, 175, 475, 425)
-surfaceToCreate = map.Terrain(100, 25, 1200, 900)
+surfaceToCreate = map.Terrain(100, 25, 1200, 800)
 surfaceToCreate.surf.fill(white)
 
 
@@ -62,9 +62,6 @@ all_sprites.add(surfaceFour)
 all_sprites.add(surfaceFive)
 all_sprites.add(surfaceSix)
 all_sprites.add(surfaceSeven)
-all_sprites.add(surfaceToCreate)
-#all_sprites.add(player1)
-#all_sprites.add(player2)
 
 players = pygame.sprite.Group()
 players.add(player1)
@@ -83,7 +80,6 @@ terrain.add(surfaceFour)
 terrain.add(surfaceFive)
 terrain.add(surfaceSix)
 terrain.add(surfaceSeven)
-terrain.add(surfaceToCreate)
 
 
 newGame = 0
