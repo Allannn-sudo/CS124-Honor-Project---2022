@@ -53,6 +53,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.move_ip(0, self.yVelocity)
     # Move the sprite based on user keypresses
     def update(self, pressed_keys):
+        
         if pressed_keys[self.left]:
             if pressed_keys[K_LSHIFT or K_RSHIFT]:
                 self.xVelocity = -10
@@ -76,12 +77,11 @@ class Player(pygame.sprite.Sprite):
                 self.grounded = False
                 self.yVelocity = -15
                 self.DOUBLEJUMP = 0
-            elif  self.DOUBLEJUMP == 0 and self.yVelocity > -5:
-                self.yVelocity = -15
-                self.airTime = 0
-                self.DOUBLEJUMP += 1
-        self.rect.move_ip(self.xVelocity, 0)
-        self.rect.move_ip(0, self.yVelocity)
+            # elif  self.DOUBLEJUMP == 0 and self.yVelocity > -5:
+            #     self.yVelocity = -15
+            #     self.airTime = 0
+            #     self.DOUBLEJUMP += 1
+        self.rect.move_ip(self.xVelocity, self.yVelocity)
 
 
         # Keep player on the screen

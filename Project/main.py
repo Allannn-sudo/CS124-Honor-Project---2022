@@ -166,9 +166,11 @@ while running:
     pressed_keys = pygame.key.get_pressed()
 
     for entity in gravity_obj:
+        notTouchingWall = True
         for obj in terrain:
             setPosx = entity.xVelocity
             if obj.rect.colliderect(entity.rect.x + entity.xVelocity, entity.rect.y, entity.width, entity.height):
+                # notTouchingWall = False
                 if obj.moving == True:
                     movingPlatform = True
                     if obj.moving_up == True:
@@ -177,19 +179,20 @@ while running:
                         entity.rect.bottom = obj.rect.top + 4
                     entity.yVelocity = 0
                     entity.grounded = True
-                    sideGrounded = True
                 elif entity.xVelocity < 0:
                     entity.rect.left = obj.rect.right
                     entity.xVelocity = 0
                     entity.grounded = False
-
+                    notTouchingWall = False
                     # print("left")
                 elif entity.xVelocity > 0:
                     entity.rect.right = obj.rect.left
                     entity.xVelocity = 0
                     entity.grounded = False
+                    notTouchingWall = False
                     # print("right")
                 else:
+                    notTouchingWall = False
                     entity.rect.centerx = obj.rect.centerx
                     entity.rect.bottom = obj.rect.top
 
@@ -207,15 +210,14 @@ while running:
                     entity.yVelocity = 0
                     entity.grounded = False
                     entity.DOUBLEJUMP = 1
-                    print("under")
+                    # print("under")
                 elif entity.yVelocity > 0:
                     entity.rect.bottom = obj.rect.top
                     entity.yVelocity = 0
                     entity.grounded = True
                     # print("on top")
                 entity.airTime = 0
-        entity.update(pressed_keys)
-        print(entity.DOUBLEJUMP)
+        entity.update(pressed_keys, notTouchingWall)
         # entity.rect.move_ip(0, entity.yVelocity)
         entity.yVelocity += gAccel * entity.airTime
         entity.airTime += 1 / FRAME_RATE
