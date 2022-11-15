@@ -51,7 +51,7 @@ surfaceToCreate.surf.fill((255, 255, 255))
 gAccel = 6
 
 player1 = movement.Player(K_UP, K_LEFT, K_RIGHT, 1)
-# player2 = movement.Player(K_w, K_a, K_d, 2)
+player2 = movement.Player(K_w, K_a, K_d, 2)
 
 all_sprites = pygame.sprite.Group()
 all_sprites.add(surfaceOne)
@@ -63,15 +63,15 @@ all_sprites.add(surfaceSix)
 all_sprites.add(surfaceSeven)
 all_sprites.add(surfaceToCreate)
 all_sprites.add(player1)
-# all_sprites.add(player2)
+all_sprites.add(player2)
 
 players = pygame.sprite.Group()
 players.add(player1)
-# players.add(player2)
+players.add(player2)
 
 gravity_obj = pygame.sprite.Group()
 gravity_obj.add(player1)
-# gravity_obj.add(player2)
+gravity_obj.add(player2)
 
 # Add blocks to sprite group
 terrain = pygame.sprite.Group()
@@ -101,10 +101,10 @@ class Score(pygame.sprite.Sprite):
         self.scoreNumber = Player.playerNumber
 #---------------
 score1 = Score(player1)
-# score2 = Score(player2)
+score2 = Score(player2)
 scores = pygame.sprite.Group()
 scores.add(score1)
-# scores.add(score2)
+scores.add(score2)
 
 
 restart_image = pygame.image.load('restartbutton.jpeg').convert_alpha()
