@@ -47,6 +47,7 @@ class Player(pygame.sprite.Sprite):
         self.height = 150
         # self.height = self.image.height()
         self.score = 0
+        self.DOUBLEJUMP = 0
         self.playerNumber = playerNumber
     def updateYPos(self):
         self.rect.move_ip(0, self.yVelocity)
@@ -70,15 +71,15 @@ class Player(pygame.sprite.Sprite):
 
         if pressed_keys[self.up]:
             # add double jump - which can only jump twice
-            DOUBLEJUMP = 0
-            if self.grounded:
-                if (DOUBLEJUMP < 2): 
-                    self.grounded = False
+            if self.grounded == True:
                 self.yVelocity = -15
-                DOUBLEJUMP += 1
-                
-            if self.yVelocity < 0:
+                self.grounded = False
+                self.DOUBLEJUMP = 0
+            if self.grounded == False and self.yVelocity > -10 and self.DOUBLEJUMP < 1:
+                self.airTime = 0
                 self.yVelocity = -15
+                self.grounded = False
+                self.DOUBLEJUMP = 2
 
 
         # Keep player on the screen
