@@ -42,7 +42,7 @@ class Terrain(pygame.sprite.Sprite):
             self.moving_up = False
 
     #Place block with mouse click
-    def update2(self):
+    def addBlock(self, terrainGroup):
         mouse_pos = pygame.mouse.get_pos()
         mouse_buttons = pygame.mouse.get_pressed()
         if any(mouse_buttons):
@@ -51,7 +51,11 @@ class Terrain(pygame.sprite.Sprite):
                     mouse_pos
                 )
             )
-        screen.blit(self.surf, self.rect)
+            mousex, mousey = pygame.mouse.get_pos()
+            surfaceEight = Terrain(100, 20, mousex-50, mousey-9)
+            terrainGroup.add(surfaceEight)
+
+        #screen.blit(self.surf, self.rect)
 
         
 
@@ -101,7 +105,7 @@ while running:
     #Move surface three up and down
     surfaceThree.update()
     #Place the surface by mouse click
-    surfaceToCreate.update2()
+    surfaceToCreate.addBlock(terrain)
 
     pygame.display.flip()
 

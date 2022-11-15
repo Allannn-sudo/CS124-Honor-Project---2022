@@ -152,7 +152,7 @@ restartButton = Button(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, restart_image, 1)
 
 
 clock = pygame.time.Clock()
-FRAME_RATE = 60
+FRAME_RATE = 120
 
 running = True
 while running:
@@ -207,7 +207,7 @@ while running:
     if newGame == 0:
         #Place block
         if restartButton.clicked == False:
-            surfaceToCreate.update2()
+            surfaceToCreate.addBlock(terrain)
         for player in players:
             #When one of the players reaches the end
             if player.rect.right == SCREEN_WIDTH:
