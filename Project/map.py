@@ -28,10 +28,12 @@ class Terrain(pygame.sprite.Sprite):
                 pos_Width, pos_Height
             )
         )
+        self.moving = False
         self.moving_up = True
     
     #Move the block up and down at a constant speed
     def update(self):
+        self.moving = True
         if self.moving_up == True:
             self.rect.move_ip(0, -3)
         elif self.moving_up == False:

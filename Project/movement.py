@@ -43,6 +43,7 @@ class Player(pygame.sprite.Sprite):
         self.left = leftbutton
         self.right = rightbutton
         self.width = 75
+        self.DOUBLEJUMP = 0
         # self.width = self.image.get_width()
         self.height = 150
         # self.height = self.image.height()
@@ -66,19 +67,21 @@ class Player(pygame.sprite.Sprite):
             # self.surf = pygame.transform.flip(pygame.image.load("move1.jpeg").convert(), True, False)
         else:
             self.xVelocity = 0
-        self.rect.move_ip(self.xVelocity, 0)
+        
 
         if pressed_keys[self.up]:
             # add double jump - which can only jump twice
-            DOUBLEJUMP = 0
+            
             if self.grounded:
-                if (DOUBLEJUMP < 2): 
-                    self.grounded = False
+                self.grounded = False
                 self.yVelocity = -15
-                DOUBLEJUMP += 1
-                
-            if self.yVelocity < 0:
+                self.DOUBLEJUMP = 0
+            elif  self.DOUBLEJUMP == 0 and self.yVelocity > -5:
                 self.yVelocity = -15
+                self.airTime = 0
+                self.DOUBLEJUMP += 1
+        self.rect.move_ip(self.xVelocity, 0)
+        self.rect.move_ip(0, self.yVelocity)
 
 
         # Keep player on the screen
