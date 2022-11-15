@@ -56,7 +56,7 @@ class Terrain(pygame.sprite.Sprite):
         
 class Platform(pygame.sprite.Sprite):
     def __init__(self, suface_Width, suface_Height, pos_Width, pos_Height):
-        super(Terrain, self).__init__()
+        super(Platform, self).__init__()
         self.surf = pygame.Surface((suface_Width, suface_Height))    
         self.surf.fill((0,255,0))
         self.rect = self.surf.get_rect(
