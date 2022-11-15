@@ -54,7 +54,28 @@ class Terrain(pygame.sprite.Sprite):
         screen.blit(self.surf, self.rect)
 
         
-
+class Platform(pygame.sprite.Sprite):
+    def __init__(self, suface_Width, suface_Height, pos_Width, pos_Height):
+        super(Terrain, self).__init__()
+        self.surf = pygame.Surface((suface_Width, suface_Height))    
+        self.surf.fill((0,255,0))
+        self.rect = self.surf.get_rect(
+            topleft=(
+                pos_Width, pos_Height
+            )
+        )
+        self.moving_up = True
+    
+    #Move the block up and down at a constant speed
+    def update(self):
+        if self.moving_up == True:
+            self.rect.move_ip(0, -3)
+        elif self.moving_up == False:
+            self.rect.move_ip(0, 3)
+        if self.rect.top == 575:
+            self.moving_up = True
+        if self.rect.top == 200:
+            self.moving_up = False
 
 #Create blocks
 surfaceOne = Terrain(200, 300, 0, 600)
@@ -72,12 +93,15 @@ surfaceToCreate.surf.fill((255, 255, 255))
 terrain = pygame.sprite.Group()
 terrain.add(surfaceOne)
 terrain.add(surfaceTwo)
-terrain.add(surfaceThree)
+#terrain.add(surfaceThree)
 terrain.add(surfaceFour)
 terrain.add(surfaceFive)
 terrain.add(surfaceSix)
 terrain.add(surfaceSeven)
 terrain.add(surfaceToCreate)
+
+platform_group = pygame.sprite.Group()
+platform_group.add(surfaceThree)
 
 #Added clock frame
 clock = pygame.time.Clock()

@@ -40,7 +40,7 @@ green = (0, 255, 0)
 # Move the block up and down at a constant speed
 surfaceOne = map.Terrain(200, 300, 0, 600)
 surfaceTwo = map.Terrain(225, 350, 350, 500)
-surfaceThree = map.Terrain(175, 50, 700, 500)
+surfaceThree = map.Platform(175, 50, 700, 500)
 surfaceFour = map.Terrain(300, 300, 1000, 600)
 surfaceFive = map.Terrain(100, 25, 0, 475)
 surfaceSix = map.Terrain(100, 25, 150, 375)
@@ -93,13 +93,15 @@ gravity_obj.add(player1)
 terrain = pygame.sprite.Group()
 terrain.add(surfaceOne)
 terrain.add(surfaceTwo)
-terrain.add(surfaceThree)
+#terrain.add(surfaceThree)
 terrain.add(surfaceFour)
 terrain.add(surfaceFive)
 terrain.add(surfaceSix)
 terrain.add(surfaceSeven)
 terrain.add(surfaceToCreate)
 
+platform_group = pygame.sprite.Group()
+platform_group.add(surfaceThree)
 
 newGame = 0
 #Score
@@ -221,24 +223,26 @@ while running:
         # dy = entity.yVelocity
         entity.airTime += 1 / FRAME_RATE
     
-    ## check for collision with moving platform
-    ## we need to put platform in its own sprite group
-    ## we also need to differentiate dx and dy (change in movement in the x and y direction) from their velocities
-    # for platform in platform_group:
-        ## collision in the x direction
-        # if platform.rect.colliderect(entity.rect.x + entity.xVelocity, entity.rect.y, entity.width, entity.height):
-            # entity.xVelocity = 0
-        ## collision in the y direction
-        # if platform.rect.colliderect(entity.rect.x, entity.rect.y + entity.yVelocity, entity.width, entity.height):
-            ## check if below platform
-            # if abs((entity.rect.top + entity.yVelocity) - platform.rect.bottom) < 20:
-                # entity.yVelocity = platform.rect.bottom - entity.rect.top
-            ## check if above platform
-            # elif abs((entity.rect.bottom + entity.yVelocity) - platform.rect.top) < 20:
-                # entity.rect.bottom = platform.rect.top - 1
-                # entity.grounded = True
-                # entity.yVelocity = 0
-            ## if we have sideways platforms, add another if statement for that
+    # check for collision with moving platform
+    # we need to put platform in its own sprite group
+    # we also need to differentiate dx and dy (change in movement in the x and y direction) from their velocities
+    for entity in gravity_obj:
+        for platform in platform_group:
+            # collision in the x direction
+            if platform.rect.colliderect(entity.rect.x + entity.xVelocity, entity.rect.y, entity.width, entity.height):
+                entity.xVelocity = 0
+            # collision in the y direction
+            if platform.rect.colliderect(entity.rect.x, entity.rect.y + entity.yVelocity, entity.width, entity.height):
+                # check if below platform
+                if abs((entity.rect.top + entity.yVelocity) - platform.rect.bottom) < 50:
+                    #entity.yVelocity = platform.rect.bottom - entity.rect.top
+                    entity.yVelocity = 0
+                # check if above platform
+                elif abs((entity.rect.bottom + entity.yVelocity) - platform.rect.top) < 50:
+                    entity.rect.bottom = platform.rect.top - 1
+                    entity.grounded = True
+                    entity.yVelocity = 0
+                # if we have sideways platforms, add another if statement for that
 
             
 
@@ -298,6 +302,9 @@ while running:
 
 
     for obj in terrain:
+        screen.blit(obj.surf, obj.rect)
+
+    for obj in platform_group:
         screen.blit(obj.surf, obj.rect)
 
     # Move surface three up and down
