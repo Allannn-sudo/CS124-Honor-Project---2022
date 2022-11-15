@@ -80,7 +80,7 @@ class Platform(pygame.sprite.Sprite):
 #Create blocks
 surfaceOne = Terrain(200, 300, 0, 600)
 surfaceTwo = Terrain(225, 350, 350, 500)
-surfaceThree = Terrain(175, 50, 700, 500)
+surfaceThree = Platform(175, 50, 700, 500)
 surfaceFour = Terrain(200, 300, 1000, 600)
 surfaceFive = Terrain(100, 25, 0, 475)
 surfaceSix = Terrain(100, 25, 150, 375)
@@ -106,27 +106,3 @@ platform_group.add(surfaceThree)
 #Added clock frame
 clock = pygame.time.Clock()
 FRAME_RATE = 60
-
-
-# running = True
-# while running:
-#     for event in pygame.event.get():
-#         if event.type == KEYDOWN:
-#             if event.key == K_ESCAPE:
-#                 running = False
-#         elif event.type == QUIT:
-#             running = False
-
-#     screen.fill((0,0,0))
-
-#     for obj in terrain:
-#         screen.blit(obj.surf,obj.rect)
-    
-#     #Move surface three up and down
-#     surfaceThree.update()
-#     #Place the surface by mouse click
-#     surfaceToCreate.update2()
-
-#     pygame.display.flip()
-
-#     clock.tick(FRAME_RATE)

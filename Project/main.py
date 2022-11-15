@@ -48,22 +48,6 @@ surfaceSeven = map.Terrain(100, 175, 475, 425)
 surfaceToCreate = map.Terrain(100, 25, 1200, 900)
 surfaceToCreate.surf.fill((255, 255, 255))
 
-#Restart button(Don't need it anymore with new Button class)
-#RestartButton = map.Terrain(150, 150, 525, 325)
-#RestartButton.rect.center = (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
-#RestartButton.surf.fill((255, 255, 255))
-
-#Text for restart button(Don't need it anymore with new Button class)
-#RestartButton.display_surface = pygame.display.set_mode((525, 325))
-#pygame.display.set_caption('Show Text')
-#RestartButton.font = pygame.font.Font('freesansbold.ttf', 32)
-#RestartButton.text = RestartButton.font.render('Restart', True, green, white)
-#RestartButton.textRect = RestartButton.text.get_rect(
-#    center=(
-#        SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2
-#    )    
-#)
-
 gAccel = 6
 
 player1 = movement.Player(K_UP, K_LEFT, K_RIGHT, 1)
@@ -165,32 +149,6 @@ while running:
         elif event.type == QUIT:
             running = False
 
-    # for entity in gravity_obj:
-    #     if pygame.sprite.spritecollideany(entity, terrain):
-    #         obj = pygame.sprite.spritecollideany(entity, terrain).rect
-    #         if entity.grounded == False:
-    #             # Check if player is less than 50 units into the ground from the top (should be only when player lands on top of terrain)
-    #             if entity.rect.right > obj.left and entity.rect.left < obj.right and entity.rect.bottom < obj.top + 50:
-    #                 entity.grounded = True
-    #                 entity.airTime = 0
-    #                 entity.yVelocity = 0
-    #                 entity.rect.y = obj.top + 1 - entity.rect.h
-    #             # Check if player is more than 50 units into the ground from the top (should be only when player is not on terrain/on the side of the terrain)
-    #             else:
-    #                 # Check which side of terrain player is colliding with
-    #                 # Right
-    #                 if entity.rect.left < obj.right and entity.rect.left > obj.right - 10:
-    #                     entity.rect.left = obj.right
-    #                 # Left
-    #                 if entity.rect.right > obj.left and entity.rect.right < obj.left + 10:
-    #                     entity.rect.right = obj.left
-    #         elif entity.grounded == True:
-    #             entity.airTime = 0
-    #     else:
-    #         entity.grounded = False
-    #         entity.yVelocity = entity.yVelocity + gAccel * entity.airTime
-    #         entity.airTime += 1 / FRAME_RATE
-
     for entity in gravity_obj:
         # dy = entity.yVelocity
         for obj in terrain:
@@ -244,11 +202,6 @@ while running:
                     entity.yVelocity = 4
                     entity.airTime = 0
                 # if we have sideways platforms, add another if statement for that
-
-            
-
-            
-
 
 
     screen.fill((0, 0, 0))
@@ -309,7 +262,6 @@ while running:
         screen.blit(obj.surf, obj.rect)
 
     # Move surface three up and down
-    
     surfaceThree.update()
 
 
