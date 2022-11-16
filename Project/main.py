@@ -40,7 +40,7 @@ green = (0, 255, 0)
 # Move the block up and down at a constant speed
 surfaceOne = map.Terrain(200, 300, 0, 600)
 surfaceTwo = map.Terrain(225, 350, 350, 500)
-surfaceThree = map.Terrain(175, 50, 700, 500)
+surfaceThree = map.Platform(175, 50, 700, 500)
 surfaceFour = map.Terrain(300, 300, 1000, 600)
 surfaceFive = map.Terrain(100, 25, 0, 475)
 surfaceSix = map.Terrain(100, 25, 150, 375)
@@ -62,6 +62,9 @@ all_sprites.add(surfaceFour)
 all_sprites.add(surfaceFive)
 all_sprites.add(surfaceSix)
 all_sprites.add(surfaceSeven)
+all_sprites.add(surfaceToCreate)
+all_sprites.add(player1)
+all_sprites.add(player2)
 
 players = pygame.sprite.Group()
 players.add(player1)
@@ -75,12 +78,15 @@ gravity_obj.add(player2)
 terrain = pygame.sprite.Group()
 terrain.add(surfaceOne)
 terrain.add(surfaceTwo)
-terrain.add(surfaceThree)
+#terrain.add(surfaceThree)
 terrain.add(surfaceFour)
 terrain.add(surfaceFive)
 terrain.add(surfaceSix)
 terrain.add(surfaceSeven)
+terrain.add(surfaceToCreate)
 
+platform_group = pygame.sprite.Group()
+platform_group.add(surfaceThree)
 
 newGame = 0
 #Score
@@ -133,7 +139,7 @@ restartButton = Button(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, restart_image, 1)
 
 
 clock = pygame.time.Clock()
-FRAME_RATE = 120
+FRAME_RATE = 60
 
 running = True
 while running:
@@ -145,30 +151,59 @@ while running:
             running = False
 
     for entity in gravity_obj:
-        if pygame.sprite.spritecollideany(entity, terrain):
-            obj = pygame.sprite.spritecollideany(entity, terrain).rect
-            if entity.grounded == False:
-                # Check if player is less than 50 units into the ground from the top (should be only when player lands on top of terrain)
-                if entity.rect.right > obj.left and entity.rect.left < obj.right and entity.rect.bottom < obj.top + 50:
-                    entity.grounded = True
-                    entity.airTime = 0
-                    entity.yVelocity = 0
-                    entity.rect.y = obj.top + 1 - entity.rect.h
-                # Check if player is more than 50 units into the ground from the top (should be only when player is not on terrain/on the side of the terrain)
+        # dy = entity.yVelocity
+        for obj in terrain:
+            setPosx = entity.xVelocity
+            if obj.rect.colliderect(entity.rect.x + entity.xVelocity, entity.rect.y, entity.width, entity.height):
+                if entity.xVelocity < 0:
+                    entity.rect.left = obj.rect.right
+                    entity.xVelocity = 0
+                    print("left")
+                elif entity.xVelocity > 0:
+                    entity.rect.right = obj.rect.left
+                    entity.xVelocity = 0
+                    print("right")
                 else:
-                    # Check which side of terrain player is colliding with
-                    # Right
-                    if entity.rect.left < obj.right and entity.rect.left > obj.right - 10:
-                        entity.rect.left = obj.right
-                    # Left
-                    if entity.rect.right > obj.left and entity.rect.right < obj.left + 10:
-                        entity.rect.right = obj.left
-            elif entity.grounded == True:
+                    entity.rect.centerx = obj.rect.centerx
+                    entity.rect.bottom = obj.rect.top
+            if obj.rect.colliderect(entity.rect.x, entity.rect.y + entity.yVelocity, entity.width, entity.height):
+                if entity.yVelocity < 0:
+                    entity.rect.top = obj.rect.bottom
+                    entity.yVelocity = 0
+                    print("under")
+                elif entity.yVelocity > 0:
+                    entity.rect.bottom = obj.rect.top
+                    entity.yVelocity = 0
+                    entity.grounded = True
+                    print("on top")
                 entity.airTime = 0
-        else:
-            entity.grounded = False
-            entity.yVelocity = entity.yVelocity + gAccel * entity.airTime
-            entity.airTime += 1 / FRAME_RATE
+        entity.rect.move_ip(0, entity.yVelocity)
+        entity.yVelocity += gAccel * entity.airTime
+        # dy = entity.yVelocity
+        entity.airTime += 1 / FRAME_RATE
+    
+    # check for collision with moving platform
+    # we need to put platform in its own sprite group
+    # we also need to differentiate dx and dy (change in movement in the x and y direction) from their velocities
+    for entity in gravity_obj:
+        for platform in platform_group:
+            # collision in the x direction
+            if platform.rect.colliderect(entity.rect.x + entity.xVelocity, entity.rect.y, entity.width, entity.height):
+                entity.grounded = True
+            # collision in the y direction
+            if platform.rect.colliderect(entity.rect.x, entity.rect.y + entity.yVelocity, entity.width, entity.height):
+                # check if below platform
+                if abs((entity.rect.top + entity.yVelocity) - platform.rect.bottom) < 50:
+                    #entity.yVelocity = platform.rect.bottom - entity.rect.top
+                    entity.grounded = True
+                # check if above platform
+                elif abs((entity.rect.bottom + entity.yVelocity) - platform.rect.top) < 50:
+                    entity.rect.bottom = platform.rect.top
+                    entity.grounded = True
+                    entity.yVelocity = 4
+                    entity.airTime = 0
+                # if we have sideways platforms, add another if statement for that
+
 
     screen.fill((0, 0, 0))
 
@@ -188,8 +223,6 @@ while running:
         for player in players:
             if player.rect.top < 800:
                 player.update(pressed_keys)
-                player.updateYPos()
-                screen.blit(player.surf, player.rect)
             #When one of the players reaches the end
             if player.rect.right == SCREEN_WIDTH:
                 #score plus one
@@ -224,6 +257,9 @@ while running:
 
 
     for obj in terrain:
+        screen.blit(obj.surf, obj.rect)
+
+    for obj in platform_group:
         screen.blit(obj.surf, obj.rect)
 
     # Move surface three up and down
