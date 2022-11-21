@@ -61,16 +61,17 @@ def addBlock(type, terrainGroup, obstacleList):
     mouse_buttons = pygame.mouse.get_pressed()
     if any(mouse_buttons):
         mousex, mousey = mouse_pos
-
         if type == "saw_obstacle":
             width = 50
             height = 50
+            obj = Terrain(width,height,mousex - width/2, mousey - height/2)
         else:
             width = 100
             height = 20
-        obj = Terrain(width,height,mousex - width/2, mousey - height/2)
+            obj = Terrain(width,height,mousex - width/2, mousey - height/2)
         obj.type = type
         obj.surf.fill((255,0,0))
+        # obj.surf = pygame.image.load("obs1Button.jpg").convert()
         terrainGroup.add(obj)
         obstacleList.append(obj)
 

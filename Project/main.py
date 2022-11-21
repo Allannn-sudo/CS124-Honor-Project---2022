@@ -111,6 +111,7 @@ scores.add(score2)
 
 
 restart_image = pygame.image.load('restartbutton.jpeg').convert_alpha()
+obs1_image = pygame.image.load('obs1Button.jpg').convert_alpha()
 #Button
 #-------------------------
 class Button(pygame.sprite.Sprite):
@@ -138,11 +139,12 @@ class Button(pygame.sprite.Sprite):
         screen.blit(self.image, (self.rect.x, self.rect.y))
 #-------------------------
 restartButton = Button(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, restart_image, 1)
+obs1Button = Button(SCREEN_WIDTH - 50, 50, obs1_image, 1)
 
 
 clock = pygame.time.Clock()
 FRAME_RATE = 60
-placeCD = -1
+placeCD = -2
 
 running = True
 while running:
@@ -156,9 +158,9 @@ while running:
     for entity in gravity_obj:
         # dy = entity.yVelocity
         for obs in obstacles:
-            if obs.rect.colliderect(entity.rect.x + entity.xVelocity, entity.rect.y, entity.width, entity.height) or obs.rect.colliderect(entity.rect.x, entity.rect.y + entity.yVelocity, entity.width, entity.height):
+            if obs.rect.colliderect(entity.rect.x + entity.xVelocity, entity.rect.y + entity.yVelocity, entity.width, entity.height) or obs.rect.colliderect(entity.rect.x, entity.rect.y + entity.yVelocity, entity.width, entity.height):
                 if obs.type == "saw_obstacle": 
-                    entity.rect.move_ip(0, 900)
+                    entity.rect.y = 1500
         for obj in terrain:
             setPosx = entity.xVelocity
             if obj.rect.colliderect(entity.rect.x + entity.xVelocity, entity.rect.y, entity.width, entity.height):
@@ -219,12 +221,17 @@ while running:
     if placeCD >= 0:
         placeCD += 1
         if placeCD == 300:
-            placeCD = -1
+            placeCD = -2
+    else:
+        obs1Button.draw()
     print(obstacles)
     #If the game is processing
     if newGame == 0:
         #Place block
         if restartButton.clicked == False:
+            if obs1Button.clicked_Then_Released == 2:
+                placeCD = -1
+                obs1Button.clicked_Then_Released = 0
             mouse_buttons = pygame.mouse.get_pressed()
             if any(mouse_buttons) and placeCD == -1:
                 map.addBlock("saw_obstacle", terrain, obstacles)
