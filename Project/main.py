@@ -88,6 +88,8 @@ terrain.add(surfaceToCreate)
 platform_group = pygame.sprite.Group()
 platform_group.add(surfaceThree)
 
+obstacles = []
+
 newGame = 0
 #Score
 #---------------
@@ -140,6 +142,7 @@ restartButton = Button(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, restart_image, 1)
 
 clock = pygame.time.Clock()
 FRAME_RATE = 60
+placeCD = -1
 
 running = True
 while running:
@@ -152,17 +155,19 @@ while running:
 
     for entity in gravity_obj:
         # dy = entity.yVelocity
+        for obs in obstacles:
+            if obs.rect.colliderect(entity.rect.x + entity.xVelocity, entity.rect.y, entity.width, entity.height) or obs.rect.colliderect(entity.rect.x, entity.rect.y + entity.yVelocity, entity.width, entity.height):
+                if obs.type == "saw_obstacle": 
+                    entity.rect.move_ip(0, 900)
         for obj in terrain:
             setPosx = entity.xVelocity
             if obj.rect.colliderect(entity.rect.x + entity.xVelocity, entity.rect.y, entity.width, entity.height):
                 if entity.xVelocity < 0:
                     entity.rect.left = obj.rect.right
                     entity.xVelocity = 0
-                    print("left")
                 elif entity.xVelocity > 0:
                     entity.rect.right = obj.rect.left
                     entity.xVelocity = 0
-                    print("right")
                 else:
                     entity.rect.centerx = obj.rect.centerx
                     entity.rect.bottom = obj.rect.top
@@ -170,12 +175,10 @@ while running:
                 if entity.yVelocity < 0:
                     entity.rect.top = obj.rect.bottom
                     entity.yVelocity = 0
-                    print("under")
                 elif entity.yVelocity > 0:
                     entity.rect.bottom = obj.rect.top
                     entity.yVelocity = 0
                     entity.grounded = True
-                    print("on top")
                 entity.airTime = 0
         entity.rect.move_ip(0, entity.yVelocity)
         entity.yVelocity += gAccel * entity.airTime
@@ -203,8 +206,6 @@ while running:
                     entity.yVelocity = 4
                     entity.airTime = 0
                 # if we have sideways platforms, add another if statement for that
-
-
     screen.fill((0, 0, 0))
 
     for entity in all_sprites:
@@ -215,11 +216,21 @@ while running:
     score1.display_surface.blit(score1.text, score1.textRect)
     score2.display_surface.blit(score2.text, (0, 40))
 
+    if placeCD >= 0:
+        placeCD += 1
+        if placeCD == 300:
+            placeCD = -1
+    print(obstacles)
     #If the game is processing
     if newGame == 0:
         #Place block
         if restartButton.clicked == False:
-            surfaceToCreate.addBlock(terrain)
+            mouse_buttons = pygame.mouse.get_pressed()
+            if any(mouse_buttons) and placeCD == -1:
+                map.addBlock("saw_obstacle", terrain, obstacles)
+                placeCD = 0
+            # surfaceToCreate.addBlock(terrain)
+
         for player in players:
             if player.rect.top < 800:
                 player.update(pressed_keys)

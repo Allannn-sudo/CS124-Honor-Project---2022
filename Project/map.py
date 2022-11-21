@@ -28,6 +28,7 @@ class Terrain(pygame.sprite.Sprite):
                 pos_Width, pos_Height
             )
         )
+        self.type = "terrain"
         self.moving_up = True
     
     #Move the block up and down at a constant speed
@@ -42,18 +43,36 @@ class Terrain(pygame.sprite.Sprite):
             self.moving_up = False
 
     #Place block with mouse click
-    def addBlock(self, terrainGroup):
-        mouse_pos = pygame.mouse.get_pos()
-        mouse_buttons = pygame.mouse.get_pressed()
-        if any(mouse_buttons):
-            self.rect = self.surf.get_rect(
-                center=(
-                    mouse_pos
-                )
-            )
-            mousex, mousey = pygame.mouse.get_pos()
-            surfaceEight = Terrain(100, 20, mousex-50, mousey-9)
-            terrainGroup.add(surfaceEight)
+    # def addBlock(self, terrainGroup):
+    #     mouse_pos = pygame.mouse.get_pos()
+    #     mouse_buttons = pygame.mouse.get_pressed()
+    #     if any(mouse_buttons):
+    #         self.rect = self.surf.get_rect(
+    #             center=(
+    #                 mouse_pos
+    #             )
+    #         )
+    #         mousex, mousey = pygame.mouse.get_pos()
+    #         surfaceEight = Terrain(100, 20, mousex-50, mousey-9)
+    #         terrainGroup.add(surfaceEight)
+
+def addBlock(type, terrainGroup, obstacleList):
+    mouse_pos = pygame.mouse.get_pos()
+    mouse_buttons = pygame.mouse.get_pressed()
+    if any(mouse_buttons):
+        mousex, mousey = mouse_pos
+
+        if type == "saw_obstacle":
+            width = 50
+            height = 50
+        else:
+            width = 100
+            height = 20
+        obj = Terrain(width,height,mousex - width/2, mousey - height/2)
+        obj.type = type
+        obj.surf.fill((255,0,0))
+        terrainGroup.add(obj)
+        obstacleList.append(obj)
 
 
 class Platform(pygame.sprite.Sprite):
