@@ -65,13 +65,19 @@ def addBlock(type, terrainGroup, obstacleList):
             width = 50
             height = 50
             obj = Terrain(width,height,mousex - width/2, mousey - height/2)
-        else:
+            obj.surf = pygame.transform.scale(pygame.image.load("obs1Button.jpg").convert(), (50, 50))
+            print("placed saw")
+        if type == "trampoline_obstacle":
             width = 100
-            height = 20
-            obj = Terrain(width,height,mousex - width/2, mousey - height/2)
+            height = 50
+            obj = Terrain( height,height,mousex - width/2, mousey - height/2)
+            obj.surf = pygame.transform.scale(pygame.image.load("obs2Button.png").convert_alpha(), (100, 50))
+        # else:
+        #     width = 100
+        #     height = 20
+        #     obj = Terrain(width,height,mousex - width/2, mousey - height/2)
+        #     print("placed terrain")
         obj.type = type
-        obj.surf.fill((255,0,0))
-        # obj.surf = pygame.image.load("obs1Button.jpg").convert()
         terrainGroup.add(obj)
         obstacleList.append(obj)
 

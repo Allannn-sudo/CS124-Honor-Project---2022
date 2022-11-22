@@ -30,9 +30,9 @@ SCREEN_HEIGHT = 800
 class Player(pygame.sprite.Sprite):
     def __init__(self, upbutton, leftbutton, rightbutton, playerNumber):
         super(Player, self).__init__()
-        self.surf = pygame.Surface((75,150))
+        self.surf = pygame.Surface((70,101))
         self.surf.fill((255,255,255))
-        # self.surf = pygame.image.load("basic.jpeg").convert()
+        self.surf = pygame.transform.scale(pygame.image.load("basic copy.jpeg").convert(), (70,101))
         # self.surf.set_colorkey((255,255,255), RLEACCEL)
         self.rect = self.surf.get_rect()
         self.grounded = False
@@ -42,9 +42,9 @@ class Player(pygame.sprite.Sprite):
         self.up = upbutton
         self.left = leftbutton
         self.right = rightbutton
-        self.width = 75
+        self.width = 70
         # self.width = self.image.get_width()
-        self.height = 150
+        self.height = 101
         # self.height = self.image.height()
         self.score = 0
         self.DOUBLEJUMP = 0
@@ -58,13 +58,13 @@ class Player(pygame.sprite.Sprite):
                 self.xVelocity = -10
             else:
                 self.xVelocity = -5
-            # self.surf = pygame.image.load("move1.jpeg").convert()
+            self.surf = pygame.image.load("move1 copy.jpeg").convert()
         elif pressed_keys[self.right]:
             if pressed_keys[K_LSHIFT or K_RSHIFT]:
                 self.xVelocity = 10
             else:
                 self.xVelocity = 5
-            # self.surf = pygame.transform.flip(pygame.image.load("move1.jpeg").convert(), True, False)
+            self.surf = pygame.transform.flip(pygame.image.load("move1 copy.jpeg").convert(), True, False)
         else:
             self.xVelocity = 0
         self.rect.move_ip(self.xVelocity, 0)

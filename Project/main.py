@@ -112,6 +112,7 @@ scores.add(score2)
 
 restart_image = pygame.image.load('restartbutton.jpeg').convert_alpha()
 obs1_image = pygame.image.load('obs1Button.jpg').convert_alpha()
+obs2_image = pygame.transform.scale(pygame.image.load('obs2Button.png').convert_alpha(), (100, 50))
 #Button
 #-------------------------
 class Button(pygame.sprite.Sprite):
@@ -140,11 +141,14 @@ class Button(pygame.sprite.Sprite):
 #-------------------------
 restartButton = Button(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, restart_image, 1)
 obs1Button = Button(SCREEN_WIDTH - 50, 50, obs1_image, 1)
+obs2Button = Button(SCREEN_WIDTH - 50, 150, obs2_image, 1)
 
 
 clock = pygame.time.Clock()
 FRAME_RATE = 60
 placeCD = -2
+obsTypes = ["terrain", "saw_obstacle", "trampoline_obstacle"]
+selectedType = obsTypes[0]
 
 running = True
 while running:
@@ -174,7 +178,10 @@ while running:
                     entity.rect.centerx = obj.rect.centerx
                     entity.rect.bottom = obj.rect.top
             if obj.rect.colliderect(entity.rect.x, entity.rect.y + entity.yVelocity, entity.width, entity.height):
-                if entity.yVelocity < 0:
+                if obj.type == "trampoline_obstacle":
+                    entity.yVelocity = -15
+                    entity.airTime = 0
+                elif entity.yVelocity < 0:
                     entity.rect.top = obj.rect.bottom
                     entity.yVelocity = 0
                 elif entity.yVelocity > 0:
@@ -208,7 +215,7 @@ while running:
                     entity.yVelocity = 4
                     entity.airTime = 0
                 # if we have sideways platforms, add another if statement for that
-    screen.fill((0, 0, 0))
+    screen.fill((50, 100, 200))
 
     for entity in all_sprites:
         screen.blit(entity.surf, entity.rect)
@@ -224,7 +231,7 @@ while running:
             placeCD = -2
     else:
         obs1Button.draw()
-    print(obstacles)
+        obs2Button.draw()
     #If the game is processing
     if newGame == 0:
         #Place block
@@ -232,9 +239,16 @@ while running:
             if obs1Button.clicked_Then_Released == 2:
                 placeCD = -1
                 obs1Button.clicked_Then_Released = 0
+                selectedType = obsTypes[1]
+                print(selectedType)
+            if obs2Button.clicked_Then_Released == 2:
+                placeCD = -1
+                obs2Button.clicked_Then_Released = 0
+                selectedType = obsTypes[2]
+                print(selectedType)
             mouse_buttons = pygame.mouse.get_pressed()
             if any(mouse_buttons) and placeCD == -1:
-                map.addBlock("saw_obstacle", terrain, obstacles)
+                map.addBlock(selectedType, terrain, obstacles)
                 placeCD = 0
             # surfaceToCreate.addBlock(terrain)
 
