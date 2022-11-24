@@ -29,7 +29,8 @@ class Terrain(pygame.sprite.Sprite):
             )
         )
         self.moving_up = True
-    
+        
+        
     #Move the block up and down at a constant speed
     def update(self):
         if self.moving_up == True:
@@ -41,22 +42,33 @@ class Terrain(pygame.sprite.Sprite):
         if self.rect.top == 200:
             self.moving_up = False
 
-    #Place block with mouse click
-    def addBlock(self, terrainGroup):
-        mouse_pos = pygame.mouse.get_pos()
-        mouse_buttons = pygame.mouse.get_pressed()
-        if any(mouse_buttons):
-            self.rect = self.surf.get_rect(
-                center=(
-                    mouse_pos
-                )
+
+
+
+class AddedBlock(pygame.sprite.Sprite):
+    def __init__(self, playerNumber):
+        super(AddedBlock, self).__init__()
+        self.display_surface = pygame.display.set_mode((0, 0))
+        pygame.display.set_caption('Show Text')
+        self.font = pygame.font.Font('freesansbold.ttf', 32)
+        self.text = self.font.render('Player ' + str(playerNumber), True, (0, 255, 0), (255, 255, 255))
+        self.textRect = self.text.get_rect(
+            center=(
+                SCREEN_WIDTH/2, SCREEN_HEIGHT/2
             )
-            mousex, mousey = pygame.mouse.get_pos()
-            surfaceEight = Terrain(100, 20, mousex-50, mousey-9)
-            terrainGroup.add(surfaceEight)
-
-        #screen.blit(self.surf, self.rect)
-
+        )
+        self.playerNumber = playerNumber
+        self.fixed = False
+        
+    def addBlock(self):
+        mouse_pos = pygame.mouse.get_pos()
+        if self.fixed == False:
+            if pygame.mouse.get_pressed()[0] == 1:
+                self.textRect = self.text.get_rect(
+                    center=(
+                        mouse_pos
+                    )
+                )
         
 
 
@@ -87,26 +99,3 @@ terrain.add(surfaceToCreate)
 clock = pygame.time.Clock()
 FRAME_RATE = 60
 
-
-running = True
-while running:
-    for event in pygame.event.get():
-        if event.type == KEYDOWN:
-            if event.key == K_ESCAPE:
-                running = False
-        elif event.type == QUIT:
-            running = False
-
-    screen.fill((0,0,0))
-
-    for obj in terrain:
-        screen.blit(obj.surf,obj.rect)
-    
-    #Move surface three up and down
-    surfaceThree.update()
-    #Place the surface by mouse click
-    surfaceToCreate.addBlock(terrain)
-
-    pygame.display.flip()
-
-    clock.tick(FRAME_RATE)

@@ -82,7 +82,9 @@ terrain.add(surfaceSix)
 terrain.add(surfaceSeven)
 
 
-newGame = 0
+placedBlock = pygame.sprite.Group()
+
+
 #Score
 #---------------
 class Score(pygame.sprite.Sprite):
@@ -103,6 +105,7 @@ scores.add(score2)
 
 
 restart_image = pygame.image.load('restartbutton.jpeg').convert_alpha()
+confirm_image = pygame.image.load('confirm.png').convert_alpha()
 #Button
 #-------------------------
 class Button(pygame.sprite.Sprite):
@@ -130,10 +133,16 @@ class Button(pygame.sprite.Sprite):
         screen.blit(self.image, (self.rect.x, self.rect.y))
 #-------------------------
 restartButton = Button(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, restart_image, 1)
+confirmButton = Button(1200, 90, confirm_image, 0.7)
+player1Block = map.AddedBlock(1)
+player2Block = map.AddedBlock(2)
 
 
 clock = pygame.time.Clock()
-FRAME_RATE = 120
+FRAME_RATE = 60
+newGame = 0
+newBlocks = 0
+
 
 running = True
 while running:
@@ -180,11 +189,25 @@ while running:
     score1.display_surface.blit(score1.text, score1.textRect)
     score2.display_surface.blit(score2.text, (0, 40))
 
+
+    player1Block.display_surface.blit(player1Block.text, player1Block.textRect)
+    player2Block.display_surface.blit(player2Block.text, player2Block.textRect)
+
     #If the game is processing
     if newGame == 0:
         #Place block
         if restartButton.clicked == False:
-            surfaceToCreate.addBlock(terrain)
+            confirmButton.draw()
+            if confirmButton.clicked_Then_Released == 0 and newBlocks < 2:
+                player1Block.addBlock()
+            if confirmButton.clicked_Then_Released == 2:
+                player1Block.fixed = True
+                newBlocks + 1
+                if confirmButton.clicked_Then_Released == 0 and newBlocks < 2:
+                    player2Block.addBlock()
+                if confirmButton.clicked_Then_Released == 2:
+                    player2Block.fixed = True
+                    newBlocks + 1
         for player in players:
             if player.rect.top < 800:
                 player.update(pressed_keys)
