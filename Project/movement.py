@@ -32,7 +32,7 @@ class Player(pygame.sprite.Sprite):
         super(Player, self).__init__()
         self.surf = pygame.Surface((70,101))
         self.surf.fill((255,255,255))
-        self.surf = pygame.transform.scale(pygame.image.load("basic copy.jpeg").convert(), (70,101))
+        # self.surf = pygame.transform.scale(pygame.image.load("basic copy.jpeg").convert(), (70,101))
         # self.surf.set_colorkey((255,255,255), RLEACCEL)
         self.rect = self.surf.get_rect()
         self.grounded = False
@@ -58,13 +58,13 @@ class Player(pygame.sprite.Sprite):
                 self.xVelocity = -10
             else:
                 self.xVelocity = -5
-            self.surf = pygame.image.load("move1 copy.jpeg").convert()
+            # self.surf = pygame.image.load("move1 copy.jpeg").convert()
         elif pressed_keys[self.right]:
             if pressed_keys[K_LSHIFT or K_RSHIFT]:
                 self.xVelocity = 10
             else:
                 self.xVelocity = 5
-            self.surf = pygame.transform.flip(pygame.image.load("move1 copy.jpeg").convert(), True, False)
+            # self.surf = pygame.transform.flip(pygame.image.load("move1 copy.jpeg").convert(), True, False)
         else:
             self.xVelocity = 0
         self.rect.move_ip(self.xVelocity, 0)
