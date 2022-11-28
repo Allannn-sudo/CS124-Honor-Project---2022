@@ -37,6 +37,7 @@ blue = (0, 0, 128)
 black = (0, 0, 0)
 green = (0, 255, 0)
 
+    
 # Move the block up and down at a constant speed
 surfaceOne = map.Terrain(200, 300, 0, 600)
 surfaceTwo = map.Terrain(225, 350, 350, 500)
@@ -69,7 +70,7 @@ gAccel = 6
 player1 = movement.Player(K_UP, K_LEFT, K_RIGHT, 1)
 player2 = movement.Player(K_w, K_a, K_d, 2)
 
-BackGround = movement.Background('backGround.png', [0,0])
+BackGround = movement.Background('backGround2.png', [0,0])
 
 all_sprites = pygame.sprite.Group()
 all_sprites.add(surfaceOne)

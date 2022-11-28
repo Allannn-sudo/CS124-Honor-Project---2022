@@ -17,17 +17,30 @@ screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 screen.fill((0, 0, 0))
         
 
+
 class Terrain(pygame.sprite.Sprite):
     def __init__(self, suface_Width, suface_Height, pos_Width, pos_Height):
         super(Terrain, self).__init__()
         self.surf = pygame.Surface((suface_Width, suface_Height))    
-        self.surf.fill((0,255,0))
+        #self.surf.fill((0,255,0))
         self.rect = self.surf.get_rect(
             topleft=(
                 pos_Width, pos_Height
             )
         )
+
+        image = pygame.image.load("Block.png").convert()
+        image = pygame.transform.scale(image, (40,40))
+
+        surface = pygame.Surface((suface_Width, suface_Height)) 
+        for i in range(0, suface_Width, 40):
+            for j in range(0, suface_Height, 40):
+                surface.blit(image, (i , j))
+
+        self.surf = surface
+
         self.moving_up = True
+
     
     #Move the block up and down at a constant speed
     def update(self):
@@ -53,7 +66,10 @@ class Terrain(pygame.sprite.Sprite):
         screen.blit(self.surf, self.rect)
 
         
-
+class TerrainImage(pygame.sprite.Sprite):
+    def __init__(self, suface_Width, suface_Height, pos_Width, pos_Height):
+        super(Terrain, self).__init__()
+        
 
 #Create blocks
 surfaceOne = Terrain(200, 300, 0, 600)
