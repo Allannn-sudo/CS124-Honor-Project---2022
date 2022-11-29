@@ -26,10 +26,11 @@ from pygame.locals import (
 
 pygame.init()
 
-SCREEN_WIDTH = 1275
+SCREEN_WIDTH = 1200
 SCREEN_HEIGHT = 800
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
 screen.fill((0, 0, 0))
+
 
 white = (255, 255, 255)
 green = (0, 255, 0)
@@ -45,8 +46,8 @@ surfaceFour = map.Terrain(300, 300, 1000, 600)
 surfaceFive = map.Terrain(100, 25, 0, 475)
 surfaceSix = map.Terrain(100, 25, 150, 375)
 surfaceSeven = map.Terrain(100, 175, 475, 425)
-surfaceToCreate = map.Terrain(100, 25, 1200, 800)
-surfaceToCreate.surf.fill(white)
+# surfaceToCreate = map.Terrain(100, 25, 1200, 800)
+# surfaceToCreate.surf.fill(white)
 
 
 gAccel = 6
@@ -62,7 +63,7 @@ all_sprites.add(surfaceFour)
 all_sprites.add(surfaceFive)
 all_sprites.add(surfaceSix)
 all_sprites.add(surfaceSeven)
-all_sprites.add(surfaceToCreate)
+# all_sprites.add(surfaceToCreate)
 all_sprites.add(player1)
 all_sprites.add(player2)
 
@@ -83,12 +84,14 @@ terrain.add(surfaceFour)
 terrain.add(surfaceFive)
 terrain.add(surfaceSix)
 terrain.add(surfaceSeven)
-terrain.add(surfaceToCreate)
+# terrain.add(surfaceToCreate)
 
 platform_group = pygame.sprite.Group()
 platform_group.add(surfaceThree)
 
 obstacles = []
+
+print(pygame.display.get_window_size())
 
 newGame = 0
 #Score
@@ -96,7 +99,7 @@ newGame = 0
 class Score(pygame.sprite.Sprite):
     def __init__(self, Player):
         super(Score, self).__init__()
-        self.display_surface = pygame.display.set_mode((0, 0))
+        self.display_surface = screen
         pygame.display.set_caption('Show Text')
         self.font = pygame.font.Font('freesansbold.ttf', 32)
         self.text = self.font.render('Player ' + str(Player.playerNumber) + ': ' + str(Player.score), True, green)
@@ -109,12 +112,14 @@ scores = pygame.sprite.Group()
 scores.add(score1)
 scores.add(score2)
 
+print(pygame.display.get_window_size())
+
 #UI Text
 #-----------------
 class Text(pygame.sprite.Sprite):
     def __init__(self, textToShow):
         super(Text, self).__init__()
-        self.display_surface = pygame.display.set_mode((0, 0))
+        self.display_surface = screen
         pygame.display.set_caption('Show Text')
         self.font = pygame.font.Font('freesansbold.ttf', 32)
         self.text = self.font.render(textToShow, True, green)
@@ -122,6 +127,8 @@ class Text(pygame.sprite.Sprite):
 gameStatusText = Text('Start')
 guiElements = pygame.sprite.Group()
 guiElements.add(gameStatusText)
+
+
 
 #-----------------
 restart_image = pygame.image.load('restartbutton.jpeg').convert_alpha()
@@ -166,6 +173,8 @@ gameTimer = 0
 objPlacedInRound = 0
 obsTypes = ["terrain", "saw_obstacle", "trampoline_obstacle"]
 selectedType = obsTypes[0]
+
+
 
 running = True
 while running:
@@ -243,6 +252,8 @@ while running:
     score2.display_surface.blit(score2.text, (0, 40))
     gameStatusText.display_surface.blit(gameStatusText.text, (SCREEN_WIDTH/2, 0))
 
+    print(gameStatusText.textRect[0])
+
     if placeCD >= 0:
         placeCD += 1
         if placeCD == 100:
@@ -302,7 +313,6 @@ while running:
     #             player.yVelocity = 0
     #         restartButton.clicked_Then_Released = 0
     #         newGame = 0
-    
 
     if gameStatus == 0:
         if objPlacedInRound < 2:
@@ -312,7 +322,7 @@ while running:
                 gameStatusText.text = gameStatusText.font.render("Player 2 Place Obstacle", True, green)
             mouse_buttons = pygame.mouse.get_pressed()
             mouse_pos = pygame.mouse.get_pos()
-            print(mouse_pos)
+            # print(mouse_pos)
             if any(mouse_buttons) and placeCD == -1 and (mouse_pos[0] < SCREEN_WIDTH - 100 or mouse_pos[1] > 200):
                 map.addBlock(selectedType, terrain, obstacles)
                 placeCD = 0

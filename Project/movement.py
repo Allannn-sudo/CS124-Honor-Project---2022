@@ -21,7 +21,7 @@ from pygame.locals import (
 
 pygame.init()
 
-SCREEN_WIDTH = 1275
+SCREEN_WIDTH = 1200
 SCREEN_HEIGHT = 800
 
 
