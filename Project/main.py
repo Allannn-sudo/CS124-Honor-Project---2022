@@ -50,6 +50,8 @@ gAccel = 6
 player1 = movement.Player(K_UP, K_LEFT, K_RIGHT, 1)
 player2 = movement.Player(K_w, K_a, K_d, 2)
 
+BackGround = movement.Background('backGround2.png', [0,0])
+
 all_sprites = pygame.sprite.Group()
 all_sprites.add(surfaceOne)
 all_sprites.add(surfaceTwo)
@@ -121,7 +123,7 @@ guiElements.add(gameStatusText)
 
 
 #-----------------
-restart_image = pygame.image.load('restartbutton.jpeg').convert_alpha()
+restart_image = pygame.image.load('restartbutton.png').convert_alpha()
 obs1_image = pygame.image.load('obs1Button.jpg').convert_alpha()
 obs2_image = pygame.transform.scale(pygame.image.load('obs2Button.png').convert_alpha(), (100, 50))
 #Button
@@ -230,6 +232,7 @@ while running:
                     entity.airTime = 0
                 # if we have sideways platforms, add another if statement for that
     screen.fill((0,0,0))
+    screen.blit(BackGround.image, BackGround.rect)
 
     for entity in all_sprites:
         screen.blit(entity.surf, entity.rect)

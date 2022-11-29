@@ -27,6 +27,15 @@ class Terrain(pygame.sprite.Sprite):
                 pos_Width, pos_Height
             )
         )
+        image = pygame.image.load("Block.png").convert_alpha()
+        image = pygame.transform.scale(image, (40,40))
+
+        surface = pygame.Surface((suface_Width, suface_Height)).convert_alpha()
+        for i in range(0, suface_Width, 40):
+            for j in range(0, suface_Height, 40):
+                surface.blit(image, (i , j))
+        self.surf = surface
+
         self.type = "terrain"
         self.moving_up = True
     
@@ -72,6 +81,15 @@ class Platform(pygame.sprite.Sprite):
                 pos_Width, pos_Height
             )
         )
+        image = pygame.image.load("Block.png").convert_alpha()
+        image = pygame.transform.scale(image, (40,40))
+
+        surface = pygame.Surface((suface_Width, suface_Height)).convert_alpha()
+        for i in range(0, suface_Width, 40):
+            for j in range(0, suface_Height, 40):
+                surface.blit(image, (i , j))
+        self.surf = surface
+        
         self.moving_up = True
 
     #Move the block up and down at a constant speed

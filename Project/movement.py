@@ -27,12 +27,29 @@ SCREEN_HEIGHT = 800
 
 
 #Classes---------------------
+
+#Background class
+class Background(pygame.sprite.Sprite):
+    def __init__(self, image_file, location):
+        self.image = pygame.image.load(image_file)
+        self.image = pygame.transform.scale(self.image,(SCREEN_WIDTH, SCREEN_HEIGHT))
+        self.rect = self.image.get_rect()
+        self.rect.left, self.rect.top = location
+
 class Player(pygame.sprite.Sprite):
     def __init__(self, upbutton, leftbutton, rightbutton, playerNumber):
         super(Player, self).__init__()
         self.surf = pygame.Surface((70,101))
         self.surf.fill((255,255,255))
-        self.surf = pygame.transform.scale(pygame.image.load("basic copy.jpeg").convert(), (70,101))
+        self.surf = pygame.transform.scale(pygame.image.load("basic.png").convert(), (70,101))
+        self.playerNumber = playerNumber
+
+        if self.playerNumber == 1:
+            self.surf = pygame.image.load("basic.png").convert_alpha()
+            self.surf = pygame.transform.scale(self.surf, (70,101))
+        else:
+            self.surf = pygame.image.load("basic2.png").convert_alpha()
+            self.surf = pygame.transform.scale(self.surf, (70,101))
         self.rect = self.surf.get_rect()
         self.grounded = False
         self.airTime = 0
@@ -48,6 +65,7 @@ class Player(pygame.sprite.Sprite):
         self.playerNumber = playerNumber
     def updateYPos(self):
         self.rect.move_ip(0, self.yVelocity)
+        
     # Move the sprite based on user keypresses
     def update(self, pressed_keys):
         if pressed_keys[self.left]:
@@ -55,13 +73,24 @@ class Player(pygame.sprite.Sprite):
                 self.xVelocity = -10
             else:
                 self.xVelocity = -5
-            self.surf = pygame.image.load("move1 copy.jpeg").convert()
+            if self.playerNumber == 1: 
+                self.surf = pygame.image.load("basic.png").convert_alpha()
+                self.surf = pygame.transform.scale(self.surf, (70,101))
+            else: 
+                self.surf = pygame.image.load("basic2.png").convert_alpha()
+                self.surf = pygame.transform.scale(self.surf, (70,101))
         elif pressed_keys[self.right]:
             if pressed_keys[K_LSHIFT or K_RSHIFT]:
                 self.xVelocity = 10
             else:
                 self.xVelocity = 5
-            self.surf = pygame.transform.flip(pygame.image.load("move1 copy.jpeg").convert(), True, False)
+
+            if self.playerNumber == 1:
+                self.surf = pygame.transform.flip(pygame.image.load("basic.png").convert_alpha(), True, False)
+                self.surf = pygame.transform.scale(self.surf, (70,101))
+            else:
+                self.surf = pygame.transform.flip(pygame.image.load("basic2.png").convert_alpha(), True, False)
+                self.surf = pygame.transform.scale(self.surf, (70,101))
         else:
             self.xVelocity = 0
         self.rect.move_ip(self.xVelocity, 0)
