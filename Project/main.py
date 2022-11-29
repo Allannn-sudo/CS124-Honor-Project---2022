@@ -2,8 +2,6 @@ import pygame
 import map
 import movement
 import importlib
-#importlib.reload(movement)
-#importlib.reload(map)
 from cgi import test
 from turtle import Screen
 from math import sqrt as root
@@ -26,10 +24,11 @@ from pygame.locals import (
 
 pygame.init()
 
-SCREEN_WIDTH = 1275
+SCREEN_WIDTH = 1200
 SCREEN_HEIGHT = 800
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
 screen.fill((0, 0, 0))
+
 
 white = (255, 255, 255)
 green = (0, 255, 0)
@@ -37,7 +36,6 @@ blue = (0, 0, 128)
 black = (0, 0, 0)
 green = (0, 255, 0)
 
-# Move the block up and down at a constant speed
 surfaceOne = map.Terrain(200, 300, 0, 600)
 surfaceTwo = map.Terrain(225, 350, 350, 500)
 surfaceThree = map.Platform(175, 50, 700, 500)
@@ -45,8 +43,6 @@ surfaceFour = map.Terrain(300, 300, 1000, 600)
 surfaceFive = map.Terrain(100, 25, 0, 475)
 surfaceSix = map.Terrain(100, 25, 150, 375)
 surfaceSeven = map.Terrain(100, 175, 475, 425)
-surfaceToCreate = map.Terrain(100, 25, 1200, 800)
-surfaceToCreate.surf.fill(white)
 
 
 gAccel = 6
@@ -62,7 +58,6 @@ all_sprites.add(surfaceFour)
 all_sprites.add(surfaceFive)
 all_sprites.add(surfaceSix)
 all_sprites.add(surfaceSeven)
-all_sprites.add(surfaceToCreate)
 all_sprites.add(player1)
 all_sprites.add(player2)
 
@@ -78,15 +73,15 @@ gravity_obj.add(player2)
 terrain = pygame.sprite.Group()
 terrain.add(surfaceOne)
 terrain.add(surfaceTwo)
-#terrain.add(surfaceThree)
 terrain.add(surfaceFour)
 terrain.add(surfaceFive)
 terrain.add(surfaceSix)
 terrain.add(surfaceSeven)
-terrain.add(surfaceToCreate)
 
 platform_group = pygame.sprite.Group()
 platform_group.add(surfaceThree)
+
+obstacles = []
 
 newGame = 0
 #Score
@@ -94,11 +89,11 @@ newGame = 0
 class Score(pygame.sprite.Sprite):
     def __init__(self, Player):
         super(Score, self).__init__()
-        self.display_surface = pygame.display.set_mode((0, 0))
+        self.display_surface = screen
         pygame.display.set_caption('Show Text')
         self.font = pygame.font.Font('freesansbold.ttf', 32)
         self.text = self.font.render('Player ' + str(Player.playerNumber) + ': ' + str(Player.score), True, green)
-        self.textRect = self.text.get_rect()
+        self.textRect = pygame.Rect(0,0, SCREEN_WIDTH,SCREEN_HEIGHT)
         self.scoreNumber = Player.playerNumber
 #---------------
 score1 = Score(player1)
@@ -107,8 +102,28 @@ scores = pygame.sprite.Group()
 scores.add(score1)
 scores.add(score2)
 
+#UI Text
+#-----------------
+class Text(pygame.sprite.Sprite):
+    def __init__(self, textToShow):
+        super(Text, self).__init__()
+        self.display_surface = screen
+        pygame.display.set_caption('Show Text')
+        self.font = pygame.font.Font('freesansbold.ttf', 32)
+        self.text = self.font.render(textToShow, True, green)
+        self.textRect = self.text.get_rect()
+        print(self.textRect)
+        self.textRect.center = (SCREEN_WIDTH/2,0)
+gameStatusText = Text('Start')
+guiElements = pygame.sprite.Group()
+guiElements.add(gameStatusText)
 
+
+
+#-----------------
 restart_image = pygame.image.load('restartbutton.jpeg').convert_alpha()
+obs1_image = pygame.image.load('obs1Button.jpg').convert_alpha()
+obs2_image = pygame.transform.scale(pygame.image.load('obs2Button.png').convert_alpha(), (100, 50))
 #Button
 #-------------------------
 class Button(pygame.sprite.Sprite):
@@ -136,10 +151,20 @@ class Button(pygame.sprite.Sprite):
         screen.blit(self.image, (self.rect.x, self.rect.y))
 #-------------------------
 restartButton = Button(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, restart_image, 1)
+obs1Button = Button(SCREEN_WIDTH - 50, 50, obs1_image, 1)
+obs2Button = Button(SCREEN_WIDTH - 50, 150, obs2_image, 1)
 
 
 clock = pygame.time.Clock()
 FRAME_RATE = 60
+placeCD = -2
+gameStatus = 0
+gameTimer = 0
+objPlacedInRound = 0
+obsTypes = ["terrain", "saw_obstacle", "trampoline_obstacle"]
+selectedType = obsTypes[0]
+
+
 
 running = True
 while running:
@@ -151,35 +176,36 @@ while running:
             running = False
 
     for entity in gravity_obj:
-        # dy = entity.yVelocity
+        for obs in obstacles:
+            if obs.rect.colliderect(entity.rect.x + entity.xVelocity, entity.rect.y + entity.yVelocity, entity.width, entity.height) or obs.rect.colliderect(entity.rect.x, entity.rect.y + entity.yVelocity, entity.width, entity.height):
+                if obs.type == "saw_obstacle": 
+                    entity.rect.y = 1500
         for obj in terrain:
             setPosx = entity.xVelocity
             if obj.rect.colliderect(entity.rect.x + entity.xVelocity, entity.rect.y, entity.width, entity.height):
                 if entity.xVelocity < 0:
                     entity.rect.left = obj.rect.right
                     entity.xVelocity = 0
-                    print("left")
                 elif entity.xVelocity > 0:
                     entity.rect.right = obj.rect.left
                     entity.xVelocity = 0
-                    print("right")
                 else:
                     entity.rect.centerx = obj.rect.centerx
                     entity.rect.bottom = obj.rect.top
             if obj.rect.colliderect(entity.rect.x, entity.rect.y + entity.yVelocity, entity.width, entity.height):
-                if entity.yVelocity < 0:
+                if obj.type == "trampoline_obstacle":
+                    entity.yVelocity = -15
+                    entity.airTime = 0
+                elif entity.yVelocity < 0:
                     entity.rect.top = obj.rect.bottom
                     entity.yVelocity = 0
-                    print("under")
                 elif entity.yVelocity > 0:
                     entity.rect.bottom = obj.rect.top
                     entity.yVelocity = 0
                     entity.grounded = True
-                    print("on top")
                 entity.airTime = 0
         entity.rect.move_ip(0, entity.yVelocity)
         entity.yVelocity += gAccel * entity.airTime
-        # dy = entity.yVelocity
         entity.airTime += 1 / FRAME_RATE
     
     # check for collision with moving platform
@@ -203,9 +229,7 @@ while running:
                     entity.yVelocity = 4
                     entity.airTime = 0
                 # if we have sideways platforms, add another if statement for that
-
-
-    screen.fill((0, 0, 0))
+    screen.fill((0,0,0))
 
     for entity in all_sprites:
         screen.blit(entity.surf, entity.rect)
@@ -214,47 +238,104 @@ while running:
     #Display score text and increase the score
     score1.display_surface.blit(score1.text, score1.textRect)
     score2.display_surface.blit(score2.text, (0, 40))
+    gameStatusText.display_surface.blit(gameStatusText.text, (SCREEN_WIDTH/2, 0))
 
-    #If the game is processing
-    if newGame == 0:
-        #Place block
-        if restartButton.clicked == False:
-            surfaceToCreate.addBlock(terrain)
-        for player in players:
-            if player.rect.top < 800:
-                player.update(pressed_keys)
-            #When one of the players reaches the end
-            if player.rect.right == SCREEN_WIDTH:
-                #score plus one
-                player.score = player.score + 1
-                #update the score text of the player who reaches the end
-                for score in scores:
-                    if score.scoreNumber == player.playerNumber:
-                        score.text = score.font.render('Player ' + str(player.playerNumber) + ': ' + str(player.score), True, green, black)
-                #Jump to restarting game
-                newGame = 1
+    if placeCD >= 0:
+        placeCD += 1
+        if placeCD == 100:
+            placeCD = -2
+    else:
+        obs1Button.draw()
+        obs2Button.draw()
 
-        #if all players fall off the map
-        #restart the game
-        if player1.rect.top >= 800 and player2.rect.top >= 800:
-            newGame = 1
+    gameStatusText.textRect.midtop = (SCREEN_WIDTH/2, 0)
+    if gameStatus == 0:
+        if objPlacedInRound < 2:
+            if objPlacedInRound == 0:
+                gameStatusText.text = gameStatusText.font.render("Player 1 Place Obstacle", True, green)
+            elif objPlacedInRound == 1:
+                gameStatusText.text = gameStatusText.font.render("Player 2 Place Obstacle", True, green)
+            mouse_buttons = pygame.mouse.get_pressed()
+            mouse_pos = pygame.mouse.get_pos()
+            # print(mouse_pos)
+            if any(mouse_buttons) and placeCD == -1 and (mouse_pos[0] < SCREEN_WIDTH - 100 or mouse_pos[1] > 200):
+                map.addBlock(selectedType, terrain, obstacles)
+                placeCD = 0
+                objPlacedInRound += 1
+            elif obs1Button.clicked_Then_Released == 2:
+                placeCD = -1
+                obs1Button.clicked_Then_Released = 0
+                selectedType = obsTypes[1]
+                print(selectedType)
+            elif obs2Button.clicked_Then_Released == 2:
+                placeCD = -1
+                obs2Button.clicked_Then_Released = 0
+                selectedType = obsTypes[2]
+                print(selectedType)
 
-    #If it goes to restarting the game
-    if newGame == 1:
-        #Show the restart button
-        restartButton.draw() 
-        #If the button is clicked, restart the game
-        if restartButton.clicked_Then_Released == 2:
+        if objPlacedInRound == 2:
+            objPlacedInRound = 0
+            gameStatus = 1
+            gameTimer = 0
+    if gameStatus == 1:
+        placeCD = 50
+        if gameTimer != 180:
+            gameTimer += 1
+            if gameTimer < 60:
+                gameStatusText.text = gameStatusText.font.render("3", True, green)
+            if gameTimer >= 60 and gameTimer < 120:
+                gameStatusText.text = gameStatusText.font.render("2", True, green)
+            if gameTimer >= 120 and gameTimer < 180:
+                gameStatusText.text = gameStatusText.font.render("1", True, green)
+        if gameTimer >= 180:
+            if gameTimer >= 180 and gameTimer < 360:
+                gameTimer += 1
+                gameStatusText.text = gameStatusText.font.render("START", True, green)
+            else:
+                gameStatusText.text = gameStatusText.font.render("", True, green)
             for player in players:
-                player.rect.top = 0
-                player.rect.left = 0
-                player.airTime = 0
-                player.yVelocity = 0
-            restartButton.clicked_Then_Released = 0
-            newGame = 0
-        
-
-
+                if player.rect.top < 800:
+                    player.update(pressed_keys)
+                #When one of the players reaches the end
+                if player.rect.right == SCREEN_WIDTH:
+                    #score plus one
+                    player.score = player.score + 1
+                    gameStatusText.text = gameStatusText.font.render("Player " + str(player.playerNumber) + " wins!", True, green)
+                    #update the score text of the player who reaches the end
+                    for score in scores:
+                        if score.scoreNumber == player.playerNumber:
+                            score.text = score.font.render('Player ' + str(player.playerNumber) + ': ' + str(player.score), True, green, black)
+                    #Jump to restarting game
+                    gameTimer = 0
+                    gameStatus = 2
+                if player1.rect.top >= 800 and player2.rect.top >= 800:
+                    gameStatusText.text = gameStatusText.font.render("Draw!", True, green)
+                    gameTimer = 0
+                    gameStatus = 2
+    if gameStatus == 2:
+        placeCD = 50
+        #show which player won or if it is a draw (both players died)
+        #if a player won, add point
+        #after a specific amount of time set gameStatus = 0 to restart
+        print(gameTimer)
+        if gameTimer >= 0:
+            gameTimer += 1
+        if gameTimer >= 90:
+            restartButton.draw()
+            gameTimer = -1
+        if gameTimer == -1:
+            #Show the restart button
+            restartButton.draw() 
+            #If the button is clicked, restart the game
+            if restartButton.clicked_Then_Released == 2:
+                for player in players:
+                    player.rect.top = 0
+                    player.rect.left = 0
+                    player.airTime = 0
+                    player.yVelocity = 0
+                restartButton.clicked_Then_Released = 0
+                placeCD = 99
+                gameStatus = 0
 
     for obj in terrain:
         screen.blit(obj.surf, obj.rect)
