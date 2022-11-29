@@ -124,7 +124,7 @@ scores.add(score1)
 scores.add(score2)
 
 
-restart_image = pygame.image.load('restartbutton.jpeg').convert_alpha()
+restart_image = pygame.image.load('restartbutton.png').convert_alpha()
 #Button
 #-------------------------
 class Button(pygame.sprite.Sprite):

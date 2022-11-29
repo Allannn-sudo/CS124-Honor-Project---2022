@@ -44,7 +44,7 @@ class Player(pygame.sprite.Sprite):
             self.surf = pygame.image.load("basic.png").convert_alpha()
             self.surf = pygame.transform.scale(self.surf, (60,80))
         else:
-            self.surf = pygame.image.load("move2.png").convert_alpha()
+            self.surf = pygame.image.load("basic2.png").convert_alpha()
             self.surf = pygame.transform.scale(self.surf, (60,80))
         # self.surf.set_colorkey((255,255,255), RLEACCEL)
         self.rect = self.surf.get_rect()
@@ -70,7 +70,7 @@ class Player(pygame.sprite.Sprite):
                 self.surf = pygame.image.load("move1.png").convert_alpha()
                 self.surf = pygame.transform.scale(self.surf, (60,80))
             else: 
-                self.surf = pygame.transform.flip(pygame.image.load("move2.jpeg").convert_alpha(), True, False)
+                self.surf = pygame.image.load("basic2.png").convert_alpha()
                 self.surf = pygame.transform.scale(self.surf, (60,80))
         if pressed_keys[self.right]:
             if pressed_keys[K_LSHIFT or K_RSHIFT]: # add shift for speeding up
@@ -82,7 +82,7 @@ class Player(pygame.sprite.Sprite):
                 self.surf = pygame.transform.flip(pygame.image.load("move1.png").convert_alpha(), True, False)
                 self.surf = pygame.transform.scale(self.surf, (60,80))
             else:
-                self.surf = pygame.image.load("move2.jpeg").convert_alpha()
+                self.surf = pygame.transform.flip(pygame.image.load("basic2.png").convert_alpha(), True, False)
                 self.surf = pygame.transform.scale(self.surf, (60,80))
         if pressed_keys[self.up]:
             # add double jump - which can only jump twice
