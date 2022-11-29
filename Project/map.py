@@ -65,11 +65,6 @@ class Terrain(pygame.sprite.Sprite):
             )
         screen.blit(self.surf, self.rect)
 
-        
-class TerrainImage(pygame.sprite.Sprite):
-    def __init__(self, suface_Width, suface_Height, pos_Width, pos_Height):
-        super(Terrain, self).__init__()
-        
 
 #Create blocks
 surfaceOne = Terrain(200, 300, 0, 600)
