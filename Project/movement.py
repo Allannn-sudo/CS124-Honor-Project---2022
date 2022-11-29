@@ -33,7 +33,6 @@ class Player(pygame.sprite.Sprite):
         self.surf = pygame.Surface((70,101))
         self.surf.fill((255,255,255))
         self.surf = pygame.transform.scale(pygame.image.load("basic copy.jpeg").convert(), (70,101))
-        # self.surf.set_colorkey((255,255,255), RLEACCEL)
         self.rect = self.surf.get_rect()
         self.grounded = False
         self.airTime = 0
@@ -43,9 +42,7 @@ class Player(pygame.sprite.Sprite):
         self.left = leftbutton
         self.right = rightbutton
         self.width = 70
-        # self.width = self.image.get_width()
         self.height = 101
-        # self.height = self.image.height()
         self.score = 0
         self.DOUBLEJUMP = 0
         self.playerNumber = playerNumber
@@ -92,29 +89,3 @@ class Player(pygame.sprite.Sprite):
             self.yVelocity = 0
         if self.rect.top >= SCREEN_HEIGHT:
             self.rect.top = SCREEN_HEIGHT
-
-
-
-#Terrain code from map.py
-class Terrain(pygame.sprite.Sprite):
-    def __init__(self, suface_Width, suface_Height, pos_Width, pos_Height):
-        super(Terrain, self).__init__()
-        self.surf = pygame.Surface((suface_Width, suface_Height))    
-        self.surf.fill((0,255,0))
-        self.rect = self.surf.get_rect(
-            topleft=(
-                pos_Width, pos_Height
-            )
-        )
-        self.moving_up = True
-    
-    #Move the block up and down at a constant speed
-    def update(self):
-        if self.moving_up == True:
-            self.rect.move_ip(0, -3)
-        elif self.moving_up == False:
-            self.rect.move_ip(0, 3)
-        if self.rect.top == 575:
-            self.moving_up = True
-        if self.rect.top == 200:
-            self.moving_up = False
