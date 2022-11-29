@@ -123,7 +123,7 @@ guiElements.add(gameStatusText)
 
 
 #-----------------
-restart_image = pygame.image.load('restartbutton.jpeg').convert_alpha()
+restart_image = pygame.image.load('restartbutton.png').convert_alpha()
 obs1_image = pygame.image.load('obs1Button.jpg').convert_alpha()
 obs2_image = pygame.transform.scale(pygame.image.load('obs2Button.png').convert_alpha(), (100, 50))
 #Button
