@@ -2,6 +2,7 @@ import pygame
 import map
 import movement
 import importlib
+import os
 from cgi import test
 from turtle import Screen
 from math import sqrt as root
@@ -50,7 +51,8 @@ gAccel = 6
 player1 = movement.Player(K_UP, K_LEFT, K_RIGHT, 1)
 player2 = movement.Player(K_w, K_a, K_d, 2)
 
-BackGround = movement.Background('backGround2.png', [0,0])
+backGroundPath = os.path.realpath("Project/backGround2.png")
+BackGround = movement.Background(backGroundPath, [0,0])
 
 all_sprites = pygame.sprite.Group()
 all_sprites.add(surfaceOne)
@@ -123,9 +125,12 @@ guiElements.add(gameStatusText)
 
 
 #-----------------
-restart_image = pygame.image.load('restartbutton.png').convert_alpha()
-obs1_image = pygame.image.load('obs1Button.jpg').convert_alpha()
-obs2_image = pygame.transform.scale(pygame.image.load('obs2Button.png').convert_alpha(), (100, 50))
+restartPath = os.path.realpath("Project/restartbutton.png")
+obs1Path = os.path.realpath("Project/obs1Button.jpg")
+obs2Path = os.path.realpath("Project/obs2Button.png")
+restart_image = pygame.image.load(restartPath).convert_alpha()
+obs1_image = pygame.image.load(obs1Path).convert_alpha()
+obs2_image = pygame.transform.scale(pygame.image.load(obs2Path).convert_alpha(), (100, 50))
 #Button
 #-------------------------
 class Button(pygame.sprite.Sprite):

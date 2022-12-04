@@ -3,6 +3,7 @@ from tkinter import XView
 from turtle import Screen
 from math import sqrt as root
 import pygame
+import os
 from pygame.locals import (
     RLEACCEL,
     K_LEFT,
@@ -38,17 +39,19 @@ class Background(pygame.sprite.Sprite):
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, upbutton, leftbutton, rightbutton, playerNumber):
+        basic = os.path.realpath("Project/basic.png")
+        basic2 = os.path.realpath("Project/basic2.png")
         super(Player, self).__init__()
         self.surf = pygame.Surface((70,101))
         self.surf.fill((255,255,255))
-        self.surf = pygame.transform.scale(pygame.image.load("basic.png").convert(), (70,101))
+        self.surf = pygame.transform.scale(pygame.image.load(basic).convert(), (70,101))
         self.playerNumber = playerNumber
 
         if self.playerNumber == 1:
-            self.surf = pygame.image.load("basic.png").convert_alpha()
+            self.surf = pygame.image.load(basic).convert_alpha()
             self.surf = pygame.transform.scale(self.surf, (70,101))
         else:
-            self.surf = pygame.image.load("basic2.png").convert_alpha()
+            self.surf = pygame.image.load(basic2).convert_alpha()
             self.surf = pygame.transform.scale(self.surf, (70,101))
         self.rect = self.surf.get_rect()
         self.grounded = False
@@ -68,16 +71,18 @@ class Player(pygame.sprite.Sprite):
         
     # Move the sprite based on user keypresses
     def update(self, pressed_keys):
+        basic = os.path.realpath("Project/basic.png")
+        basic2 = os.path.realpath("Project/basic2.png")
         if pressed_keys[self.left]:
             if pressed_keys[K_LSHIFT or K_RSHIFT]:
                 self.xVelocity = -10
             else:
                 self.xVelocity = -5
             if self.playerNumber == 1: 
-                self.surf = pygame.image.load("basic.png").convert_alpha()
+                self.surf = pygame.image.load(basic).convert_alpha()
                 self.surf = pygame.transform.scale(self.surf, (70,101))
             else: 
-                self.surf = pygame.image.load("basic2.png").convert_alpha()
+                self.surf = pygame.image.load(basic2).convert_alpha()
                 self.surf = pygame.transform.scale(self.surf, (70,101))
         elif pressed_keys[self.right]:
             if pressed_keys[K_LSHIFT or K_RSHIFT]:
@@ -86,10 +91,10 @@ class Player(pygame.sprite.Sprite):
                 self.xVelocity = 5
 
             if self.playerNumber == 1:
-                self.surf = pygame.transform.flip(pygame.image.load("basic.png").convert_alpha(), True, False)
+                self.surf = pygame.transform.flip(pygame.image.load(basic).convert_alpha(), True, False)
                 self.surf = pygame.transform.scale(self.surf, (70,101))
             else:
-                self.surf = pygame.transform.flip(pygame.image.load("basic2.png").convert_alpha(), True, False)
+                self.surf = pygame.transform.flip(pygame.image.load(basic2).convert_alpha(), True, False)
                 self.surf = pygame.transform.scale(self.surf, (70,101))
         else:
             self.xVelocity = 0
