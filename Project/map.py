@@ -1,4 +1,5 @@
 import pygame
+import os
 
 from pygame.locals import (
     K_LEFT,
@@ -27,7 +28,10 @@ class Terrain(pygame.sprite.Sprite):
                 pos_Width, pos_Height
             )
         )
-        image = pygame.image.load("Block.png").convert_alpha()
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        blockPath = os.path.join(dir_path, "Block.png")
+        # block = os.path.realpath(blockPath)
+        image = pygame.image.load(blockPath).convert_alpha()
         image = pygame.transform.scale(image, (40,40))
 
         surface = pygame.Surface((suface_Width, suface_Height)).convert_alpha()
@@ -51,6 +55,9 @@ class Terrain(pygame.sprite.Sprite):
             self.moving_up = False
 
 def addBlock(type, terrainGroup, obstacleList):
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    obs1Path = os.path.join(dir_path, "obs1Button.jpg")
+    obs2Path = os.path.join(dir_path, "obs2Button.png")
     mouse_pos = pygame.mouse.get_pos()
     mouse_buttons = pygame.mouse.get_pressed()
     if any(mouse_buttons):
@@ -59,13 +66,13 @@ def addBlock(type, terrainGroup, obstacleList):
             width = 50
             height = 50
             obj = Terrain(width,height,mousex - width/2, mousey - height/2)
-            obj.surf = pygame.transform.scale(pygame.image.load("obs1Button.jpg").convert(), (50, 50))
+            obj.surf = pygame.transform.scale(pygame.image.load(obs1Path).convert(), (50, 50))
             print("placed saw")
         if type == "trampoline_obstacle":
             width = 100
             height = 50
             obj = Terrain( height,height,mousex - width/2, mousey - height/2)
-            obj.surf = pygame.transform.scale(pygame.image.load("obs2Button.png").convert_alpha(), (100, 50))
+            obj.surf = pygame.transform.scale(pygame.image.load(obs2Path).convert_alpha(), (100, 50))
         obj.type = type
         terrainGroup.add(obj)
         obstacleList.append(obj)
@@ -81,7 +88,9 @@ class Platform(pygame.sprite.Sprite):
                 pos_Width, pos_Height
             )
         )
-        image = pygame.image.load("Block.png").convert_alpha()
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        blockPath = os.path.join(dir_path, "Block.png")
+        image = pygame.image.load(blockPath).convert_alpha()
         image = pygame.transform.scale(image, (40,40))
 
         surface = pygame.Surface((suface_Width, suface_Height)).convert_alpha()
