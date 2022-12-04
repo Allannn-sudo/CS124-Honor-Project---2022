@@ -51,7 +51,8 @@ gAccel = 6
 player1 = movement.Player(K_UP, K_LEFT, K_RIGHT, 1)
 player2 = movement.Player(K_w, K_a, K_d, 2)
 
-backGroundPath = os.path.realpath("Project/backGround2.png")
+dir_path = os.path.dirname(os.path.realpath(__file__))
+backGroundPath = os.path.join(dir_path, "backGround2.png")
 BackGround = movement.Background(backGroundPath, [0,0])
 
 all_sprites = pygame.sprite.Group()
@@ -125,9 +126,10 @@ guiElements.add(gameStatusText)
 
 
 #-----------------
-restartPath = os.path.realpath("Project/restartbutton.png")
-obs1Path = os.path.realpath("Project/obs1Button.jpg")
-obs2Path = os.path.realpath("Project/obs2Button.png")
+dir_path = os.path.dirname(os.path.realpath(__file__))
+restartPath = os.path.join(dir_path, "restartbutton.png")
+obs1Path = os.path.join(dir_path, "obs1Button.jpg")
+obs2Path = os.path.join(dir_path, "obs2Button.png")
 restart_image = pygame.image.load(restartPath).convert_alpha()
 obs1_image = pygame.image.load(obs1Path).convert_alpha()
 obs2_image = pygame.transform.scale(pygame.image.load(obs2Path).convert_alpha(), (100, 50))
