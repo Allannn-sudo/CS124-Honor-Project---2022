@@ -1,5 +1,6 @@
 # Group 2
-Group Name: TEAM_NAME
+
+A Ninaja Jumping Game implemented using Pygame
 
 [MVP Link](https://docs.google.com/document/d/1XHEEqO0aLWxXaar-sTC5eXku1EkdCDTstHjrertaERY/edit)
 
